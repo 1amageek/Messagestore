@@ -1,6 +1,6 @@
 //
 //  MessagesViewController.swift
-//  Muni
+//  Messagestore
 //
 //  Created by 1amageek on 2018/07/31.
 //  Copyright © 2018年 1amageek. All rights reserved.
@@ -56,7 +56,7 @@ extension Message {
         
         open lazy var titleView: MessagesTitleView? = {
             guard let senderID: String = self.senderID else {
-                fatalError("[Muni] error: You need to override senderID.")
+                fatalError("[Messagestore] error: You need to override senderID.")
             }
             let titleView: MessagesTitleView = UINib(nibName: "MessagesTitleView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessagesTitleView
             if let name: String = self.room.data?.name {
@@ -155,9 +155,11 @@ extension Message {
         public init(room: Document<RoomType>, fetching limit: Int = 20) {
             self.limit = limit
             self.room = room
-            let option: DataSourceOption = DataSourceOption()
+            let option: DataSource<TranscriptType>.Option = DataSource.Option()
+            option.sortClosure = { l, r in
+                return l.updatedAt < r.updatedAt
+            }
             option.listeningChangeTypes = [.added, .modified]
-            option.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: true)]
             self.dataSource = room.collection(key: "transcripts")
                 .order(by: "updatedAt", descending: true)
                 .limit(to: limit)
@@ -271,7 +273,7 @@ extension Message {
         
         open func markAsRead() {
             guard let senderID: String = self.senderID else {
-                fatalError("[Muni] error: You need to override senderID.")
+                fatalError("[Messagestore] error: You need to override senderID.")
             }
             self.room.data?.hasNewMessages = false
 //            if let viewer: Viewer = self.viewer, let transcript: TranscriptType = self.dataSource.last {
@@ -298,37 +300,38 @@ extension Message {
         @objc
         public func send() {
             guard let senderID: String = self.senderID else {
-                fatalError("[Muni] error: You need to override senderID.")
+                fatalError("[Messagestore] error: You need to override senderID.")
             }
-            let transcript: Document<TranscriptType> = Document()
-            let sender: Document<UserType> = Document(id: senderID)
-            let batch: WriteBatch = Firestore.firestore().batch()
+            let room: Document<RoomType> = self.room
+            let transcript: Document<TranscriptType> = Document(collectionReference: room.documentReference.collection("transcripts"))
+            let batch: Batch = Batch()
             transcript[\.from] = senderID
-            transcript[\.to] = self.room.id
-//            if !self.transcript(transcript, shouldSendTo: room) {
-//                return
-//            }
-//            self.transcript(transcript, willSendTo: room, with: batch)
-//            room.recentTranscript = transcript.value
-//            room.transcripts.insert(transcript)
-//            room.update(batch) { [weak self] (error) in
-//                self?.transcript(transcript, didSend: room, reference: transcript.reference, error: error)
-//            }
+            transcript[\.to] = room.id
+            if !self.transcript(transcript, shouldSendTo: room) {
+                return
+            }
+            self.transcript(transcript, willSendTo: room, with: batch)
+            self.room.data?.recentTranscript = transcript.data
+            batch.save(document: transcript)
+            batch.update(document: self.room)
+            batch.commit { [weak self] (error) in
+                self?.transcript(transcript, didSend: room, reference: transcript.documentReference, error: error)
+            }
         }
 
         /// - returns: If false is set, messages will not be sent.
-        open func transcript(_ transcript: TranscriptType, shouldSendTo room: RoomType) -> Bool {
+        open func transcript(_ transcript: Document<TranscriptType>, shouldSendTo room: Document<RoomType>) -> Bool {
             return true
         }
         
         /// Set contents in Transcript.
         /// It must be overridden.
-        open func transcript(_ transcript: TranscriptType, willSendTo room: RoomType, with batch: WriteBatch) {
+        open func transcript(_ transcript: Document<TranscriptType>, willSendTo room: Document<RoomType>, with batch: Batch) {
 
         }
         
         /// Called after the message has been sent.
-        open func transcript(_ transcript: TranscriptType, didSend room: RoomType, reference: DocumentReference?, error: Error?) {
+        open func transcript(_ transcript: Document<TranscriptType>, didSend room: Document<RoomType>, reference: DocumentReference?, error: Error?) {
             
         }
         
@@ -368,7 +371,7 @@ extension Message {
 
         open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let senderID: String = self.senderID else {
-                fatalError("[Muni] error: You need to override senderID.")
+                fatalError("[Messagestore] error: You need to override senderID.")
             }
 
             if indexPath.section == self.targetSection {
@@ -406,7 +409,7 @@ extension Message {
                     return cell
                 }
             } else {
-                fatalError("[Muni] error: targetSection is incorrect..")
+                fatalError("[Messagestore] error: targetSection is incorrect..")
             }
         }
         
@@ -416,7 +419,7 @@ extension Message {
         
         open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             guard let senderID: String = self.senderID else {
-                fatalError("[Muni] error: You need to override senderID.")
+                fatalError("[Messagestore] error: You need to override senderID.")
             }
 
             if indexPath.section == self.targetSection {
@@ -456,7 +459,7 @@ extension Message {
                     return size
                 }
             } else {
-                fatalError("[Muni] error: targetSection is incorrect.")
+                fatalError("[Messagestore] error: targetSection is incorrect.")
             }
         }
         

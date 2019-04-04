@@ -13,3 +13,15 @@ target 'Messagestore' do
   end
 
 end
+
+target 'Sample' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  use_frameworks!
+ 
+  pod 'Firebase/Auth'
+  pod 'Ballcap'
+  pod 'Toolbar'
+  pod 'Instantiate'
+  pod 'InstantiateStandard'
+
+end

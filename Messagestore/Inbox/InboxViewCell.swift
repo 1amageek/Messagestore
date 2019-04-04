@@ -1,6 +1,6 @@
 //
 //  InboxViewCell.swift
-//  Muni
+//  Messagestore
 //
 //  Created by 1amageek on 2018/07/31.
 //  Copyright © 2018年 1amageek. All rights reserved.

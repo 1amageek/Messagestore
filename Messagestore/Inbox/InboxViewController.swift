@@ -67,8 +67,10 @@ extension Message {
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
         open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<RoomType> {
-            let option: DataSourceOption = DataSourceOption()
-            option.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
+            let option: DataSource<RoomType>.Option = DataSource.Option()
+            option.sortClosure = { l, r in
+                return l.updatedAt > r.updatedAt
+            }
             return Document<RoomType>
                 .order(by: "updatedAt", descending: true)
                 .where("members", arrayContains: userID)

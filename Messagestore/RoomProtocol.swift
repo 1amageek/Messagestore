@@ -1,6 +1,6 @@
 //
 //  RoomProtocol.swift
-//  Muni
+//  Messagestore
 //
 //  Created by 1amageek on 2018/07/31.
 //  Copyright © 2018年 1amageek. All rights reserved.
@@ -13,6 +13,8 @@ import Ballcap
  Define the properties that the `Room` object should have.
  */
 public protocol RoomProtocol {
+
+    associatedtype TranscriptType: TranscriptProtocol
 
     /// Room gets a new message.
     /// This property is not saved to Firestore.
@@ -32,7 +34,7 @@ public protocol RoomProtocol {
     var lastViewedTimestamps: [String: Timestamp] { get set }
 
     /// The message most recently spoken is stored.
-//    var recentTranscript: [String: Any] { get set }
+    var recentTranscript: TranscriptType? { get set }
 
     /// Returns if message is possible. default true.
     var isMessagingEnabled: Bool { get set }
