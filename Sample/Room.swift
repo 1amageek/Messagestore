@@ -12,8 +12,6 @@ import Firebase
 struct Room: Modelable, Codable , RoomProtocol {
 
     typealias TranscriptType = Transcript
-
-    var hasNewMessages: Bool = false
     var name: String?
     var thumbnailImage: File?
     var members: [String] = []

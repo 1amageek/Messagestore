@@ -198,10 +198,12 @@ extension Message {
 //                    cell.nameLabel.text = config[nameKey] as? String
 //                }
 //            }
-//            if let text: String = room.recentTranscript["text"] as? String {
-//                cell.messageLabel?.text = text
-//            }
-//            cell.format = room.data?.hasNewMessages ? .bold : .normal
+            if let text: String = room.data?.recentTranscript?.text {
+                cell.messageLabel?.text = text
+            }
+            if let viewer: Document<Viewer> = Document<Viewer>.get(documentReference: room.documentReference.collection("viewers").document(userID)) {
+                cell.format = room.updatedAt > viewer.updatedAt ? .bold : .normal
+            }
             return cell
         }
 

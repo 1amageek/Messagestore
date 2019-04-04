@@ -16,11 +16,6 @@ public protocol RoomProtocol {
 
     associatedtype TranscriptType: TranscriptProtocol
 
-    /// Room gets a new message.
-    /// This property is not saved to Firestore.
-    /// It should not be a property of Dynamic.
-    var hasNewMessages: Bool { get set }
-
     /// It is the display name of the room.
     var name: String? { get set }
 

@@ -8,6 +8,7 @@
 
 import UIKit
 import Ballcap
+import FirebaseAuth
 import FirebaseFirestore
 import Toolbar
 
@@ -34,7 +35,7 @@ extension Message {
         /// Returns a CollectionView that displays a message.
         public private(set) var collectionView: MessagesView!
 
-        public private(set) var viewer: Viewer?
+        public private(set) var viewer: Document<Viewer>?
         
         /// Returns a Section that reflects the update of the data source.
         open var targetSection: Int {
@@ -155,10 +156,9 @@ extension Message {
         public init(room: Document<RoomType>, fetching limit: Int = 20) {
             self.limit = limit
             self.room = room
+            self.viewer = Document(id: Auth.auth().currentUser!.uid, collectionReference: room.documentReference.collection("viewers"))
             let option: DataSource<TranscriptType>.Option = DataSource.Option()
-            option.sortClosure = { l, r in
-                return l.updatedAt < r.updatedAt
-            }
+            option.sortClosure = { $0.updatedAt < $1.updatedAt }
             option.listeningChangeTypes = [.added, .modified]
             self.dataSource = room.collection(key: "transcripts")
                 .order(by: "updatedAt", descending: true)
@@ -195,7 +195,6 @@ extension Message {
             super.viewDidLoad()
             self.navigationItem.titleView = self.titleView
             self.addKeyboardObservers()
-
             self.dataSource
                 //                .on { (_, transcript, done) in
                 //
@@ -272,23 +271,13 @@ extension Message {
         }
         
         open func markAsRead() {
-            guard let senderID: String = self.senderID else {
-                fatalError("[Messagestore] error: You need to override senderID.")
+            if let viewer: Document<Viewer> = self.viewer, let transcript: Document<TranscriptType> = self.dataSource.last {
+                if viewer.updatedAt.dateValue() < transcript.updatedAt.dateValue() {
+                    self.viewer?.update()
+                }
+            } else {
+                self.viewer?.update()
             }
-            self.room.data?.hasNewMessages = false
-//            if let viewer: Viewer = self.viewer, let transcript: TranscriptType = self.dataSource.last {
-//                if viewer.updatedAt.dateValue() < transcript.updatedAt.dateValue() {
-//                    self.room.viewers.reference.document(senderID).setData([
-//                        "createdAt" : FieldValue.serverTimestamp(),
-//                        "updatedAt" : FieldValue.serverTimestamp()
-//                        ], merge: true)
-//                }
-//            } else {
-//                self.room.viewers.reference.document(senderID).setData([
-//                    "createdAt" : FieldValue.serverTimestamp(),
-//                    "updatedAt" : FieldValue.serverTimestamp()
-//                    ], merge: true)
-//            }
         }
         
         /// It is called after the first fetch of the data source is finished.
