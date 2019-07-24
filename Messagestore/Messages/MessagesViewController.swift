@@ -262,7 +262,7 @@ extension Message {
         }
         
         open func markAsRead() {
-            guard let uid: String = Auth.auth().currentUser?.uid else { return }
+            guard let uid: String = self.senderID else { return }
             self.room.data?.lastViewedTimestamps[uid] = .pending
             self.room.update()
         }
