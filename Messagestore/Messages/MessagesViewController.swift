@@ -8,7 +8,6 @@
 
 import UIKit
 import Ballcap
-import FirebaseAuth
 import FirebaseFirestore
 import Toolbar
 
