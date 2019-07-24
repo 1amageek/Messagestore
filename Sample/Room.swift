@@ -12,11 +12,12 @@ import Firebase
 struct Room: Modelable, Codable , RoomProtocol {
 
     typealias TranscriptType = Transcript
+
     var name: String?
     var thumbnailImage: File?
     var members: [String] = []
     var recentTranscript: Transcript?
     var isMessagingEnabled: Bool = true
     var isHidden: Bool = false
-    var lastViewedTimestamps: [String : Timestamp] = [:]
+    var lastViewedTimestamps: [String : ServerTimestamp] = [:]
 }

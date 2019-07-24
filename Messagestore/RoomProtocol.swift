@@ -26,7 +26,7 @@ public protocol RoomProtocol {
     var members: [String] { get set }
 
     /// Record the last time the viewer saw it.
-    var lastViewedTimestamps: [String: Timestamp] { get set }
+    var lastViewedTimestamps: [String: ServerTimestamp] { get set }
 
     /// The message most recently spoken is stored.
     var recentTranscript: TranscriptType? { get set }
@@ -44,10 +44,4 @@ public protocol RoomProtocol {
     /// let name: String = userConfig[Room.configNameKey]
     /// ```
 //    var config: [String: Any] { get set }
-}
-
-public struct Viewer: Codable & Modelable {
-    public init() {
-        
-    }
 }

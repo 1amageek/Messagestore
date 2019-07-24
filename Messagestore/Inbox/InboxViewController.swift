@@ -19,7 +19,7 @@ extension Message {
         public let userID: String
 
         /// Room's DataSource
-        public private(set) var dataSource: DataSource<RoomType>!
+        public private(set) var dataSource: DataSource<Document<RoomType>>!
 
         /// limit The maximum number of rooms to return.
         public let limit: Int
@@ -66,8 +66,8 @@ extension Message {
         ///   - userID: Set the ID of the user who is participating in the Room.
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
-        open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<RoomType> {
-            let option: DataSource<RoomType>.Option = DataSource.Option()
+        open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<Document<RoomType>> {
+            let option: DataSource<Document<RoomType>>.Option = DataSource.Option()
             option.sortClosure = { l, r in
                 return l.updatedAt > r.updatedAt
             }
@@ -101,7 +101,7 @@ extension Message {
 //                }
                 .on({ [weak self] (snapshot, changes) in
                     guard let tableView: UITableView = self?.tableView else { return }
-                    guard let dataSource: DataSource<RoomType> = self?.dataSource else { return }
+                    guard let dataSource: DataSource<Document<RoomType>> = self?.dataSource else { return }
                     guard let section: Int = self?.targetSection else { return }
                     switch changes {
                     case .initial:
@@ -136,7 +136,7 @@ extension Message {
         // MARK: -
 
         /// It is called after the first fetch of the data source is finished.
-        open func didInitialize(of dataSource: DataSource<RoomType>) {
+        open func didInitialize(of dataSource: DataSource<Document<RoomType>>) {
             // override
         }
 
@@ -201,14 +201,21 @@ extension Message {
             if let text: String = room.data?.recentTranscript?.text {
                 cell.messageLabel?.text = text
             }
-            if let viewer: Document<Viewer> = Document<Viewer>.get(documentReference: room.documentReference.collection("viewers").document(userID)) {
-                cell.format = room.updatedAt > viewer.updatedAt ? .bold : .normal
+            if let lastViewedTimestamps = room.data?.lastViewedTimestamps {
+                if let lastViewedTimestamp = lastViewedTimestamps[self.userID] {
+                    cell.format = lastViewedTimestamp.rawValue > room.updatedAt ? .normal : .normal
+
+                } else {
+                    cell.format = .bold
+                }
+            } else {
+                cell.format = .bold
             }
             return cell
         }
 
         open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let room: Document<RoomType> = self.dataSource[indexPath.item]
+            let room: Document<RoomType> = self.dataSource![indexPath.item]
             let viewController: MessagesViewController = messageViewController(with: room)
             self.navigationController?.pushViewController(viewController, animated: true)
         }

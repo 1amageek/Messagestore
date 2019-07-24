@@ -28,14 +28,10 @@ extension Message {
         public let limit: Int
         
         /// Returns the DataSource of Transcript.
-        public var dataSource: DataSource<TranscriptType>!
-
-        public var viewers: DataSource<Viewer>!
+        public var dataSource: DataSource<Document<TranscriptType>>!
         
         /// Returns a CollectionView that displays a message.
         public private(set) var collectionView: MessagesView!
-
-        public private(set) var viewer: Document<Viewer>?
         
         /// Returns a Section that reflects the update of the data source.
         open var targetSection: Int {
@@ -156,11 +152,11 @@ extension Message {
         public init(room: Document<RoomType>, fetching limit: Int = 20) {
             self.limit = limit
             self.room = room
-            self.viewer = Document(id: Auth.auth().currentUser!.uid, collectionReference: room.documentReference.collection("viewers"))
-            let option: DataSource<TranscriptType>.Option = DataSource.Option()
+            let option: DataSource<Document<TranscriptType>>.Option = DataSource.Option()
             option.sortClosure = { $0.updatedAt < $1.updatedAt }
             option.listeningChangeTypes = [.added, .modified]
-            self.dataSource = room.collection(key: "transcripts")
+
+            self.dataSource = DataSource<Document<TranscriptType>>.Query(room.documentReference.collection("transcripts"))
                 .order(by: "updatedAt", descending: true)
                 .limit(to: limit)
                 .dataSource(option: option)
@@ -201,7 +197,7 @@ extension Message {
                 //            }
                 .on { [weak self] (snapshot, changes) in
                     guard let collectionView: MessagesView = self?.collectionView else { return }
-                    guard let dataSource: DataSource<TranscriptType> = self?.dataSource else { return }
+                    guard let dataSource: DataSource<Document<TranscriptType>> = self?.dataSource else { return }
                     guard let section: Int = self?.targetSection else { return }
                     switch changes {
                     case .initial:
@@ -263,25 +259,16 @@ extension Message {
         /// Start listening
         open func listen() {
             self.dataSource.listen()
-            self.viewers = self.room.collection(key: "viewers")
-                .dataSource()
-                .onCompleted({ (_, viewers) in
-
-            }).listen()
         }
         
         open func markAsRead() {
-            if let viewer: Document<Viewer> = self.viewer, let transcript: Document<TranscriptType> = self.dataSource.last {
-                if viewer.updatedAt.dateValue() < transcript.updatedAt.dateValue() {
-                    self.viewer?.update()
-                }
-            } else {
-                self.viewer?.update()
-            }
+            guard let uid: String = Auth.auth().currentUser?.uid else { return }
+            self.room.data?.lastViewedTimestamps[uid] = .pending
+            self.room.update()
         }
         
         /// It is called after the first fetch of the data source is finished.
-        open func didInitialize(of dataSource: DataSource<TranscriptType>) {
+        open func didInitialize(of dataSource: DataSource<Document<TranscriptType>>) {
             // override
         }
         
@@ -301,8 +288,8 @@ extension Message {
             }
             self.transcript(transcript, willSendTo: room, with: batch)
             self.room.data?.recentTranscript = transcript.data
-            batch.save(document: transcript)
-            batch.update(document: self.room)
+            batch.save(transcript)
+            batch.update(self.room)
             batch.commit { [weak self] (error) in
                 self?.transcript(transcript, didSend: room, reference: transcript.documentReference, error: error)
             }

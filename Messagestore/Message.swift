@@ -17,6 +17,6 @@ import Ballcap
 open class Message<
     UserType: UserProtocol & Modelable & Codable,
     RoomType: RoomProtocol & Modelable & Codable,
-    TranscriptType: TranscriptProtocol & Modelable & Codable
+    TranscriptType: Modelable & Codable
     >: NSObject where RoomType.TranscriptType == TranscriptType
 { }
