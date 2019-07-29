@@ -28,9 +28,9 @@ class MessageViewController: Message<User, Room, Transcript>.MessagesViewControl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
         self.collectionView.registerNib(type: HeaderCell.self)
         self.sendBarItem = ToolbarItem(title: "Send", target: self, action: #selector(send))
+        self.toolBar.maximumHeight = 150
         self.toolBar.setItems([ToolbarItem(customView: self.textView), self.sendBarItem], animated: false)
         self.listen()
     }

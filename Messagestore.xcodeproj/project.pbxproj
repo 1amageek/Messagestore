@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -34,17 +34,12 @@
 		12E25AFC2255BF070046CB1C /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF22255BF060046CB1C /* HeaderCell.swift */; };
 		12E25AFD2255BF070046CB1C /* BoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF32255BF060046CB1C /* BoxViewController.swift */; };
 		12E25AFE2255BF070046CB1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF42255BF070046CB1C /* User.swift */; };
-		12E25AFF2255BF070046CB1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AF52255BF070046CB1C /* GoogleService-Info.plist */; };
-		12E25B002255BF070046CB1C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF62255BF070046CB1C /* AppDelegate.swift */; };
 		12E25B012255BF070046CB1C /* Transcript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF72255BF070046CB1C /* Transcript.swift */; };
 		12E25B022255BF070046CB1C /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF82255BF070046CB1C /* MessageViewController.swift */; };
 		12E25B032255C1E10046CB1C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCE225463B2004D1AC4 /* Message.swift */; };
 		12E25B042255C1E10046CB1C /* RoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */; };
 		12E25B052255C1E10046CB1C /* TranscriptProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */; };
 		12E25B062255C1E10046CB1C /* UserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCD225463AF004D1AC4 /* UserProtocol.swift */; };
-		12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */; };
-		12E25B082255C1E40046CB1C /* InboxViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */; };
-		12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF62254A6FC004D1AC4 /* InboxViewCell.swift */; };
 		12E25B0A2255C1E70046CB1C /* MessageViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF82254A6FD004D1AC4 /* MessageViewCell.swift */; };
 		12E25B0B2255C1E70046CB1C /* MessageViewRightCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF92254A6FD004D1AC4 /* MessageViewRightCell.xib */; };
 		12E25B0C2255C1E70046CB1C /* MessageViewRightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CFA2254A6FD004D1AC4 /* MessageViewRightCell.swift */; };
@@ -57,6 +52,10 @@
 		12E25B132255C1E70046CB1C /* MessagesTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75D012254A6FD004D1AC4 /* MessagesTitleView.swift */; };
 		12E25B162255CAB30046CB1C /* ViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12E25B142255CAB30046CB1C /* ViewController.storyboard */; };
 		12E25B172255CAB30046CB1C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25B152255CAB30046CB1C /* ViewController.swift */; };
+		372C779722EAFA050072BC7F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372C779522EAF9E50072BC7F /* AppDelegate.swift */; };
+		372C779C22EAFD7C0072BC7F /* InboxViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */; };
+		372C779D22EAFD7F0072BC7F /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */; };
+		372C779E22EAFD820072BC7F /* InboxViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF62254A6FC004D1AC4 /* InboxViewCell.swift */; };
 		6A84F4B1D42B4AA7C7CF7E07 /* Pods_MessagestoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA9B2C35D94D7A8D0AD606E1 /* Pods_MessagestoreTests.framework */; };
 		C4EBD91632EDDDFF396DD4D2 /* Pods_Messagestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D5187A18672521346A180E /* Pods_Messagestore.framework */; };
 		C806D49A37B92CC3F5279F7A /* Pods_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D21C7354EDA654E560AFFBB4 /* Pods_Sample.framework */; };
@@ -105,12 +104,11 @@
 		12E25AF22255BF060046CB1C /* HeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		12E25AF32255BF060046CB1C /* BoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoxViewController.swift; sourceTree = "<group>"; };
 		12E25AF42255BF070046CB1C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		12E25AF52255BF070046CB1C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		12E25AF62255BF070046CB1C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../Muni/Sample/AppDelegate.swift; sourceTree = "<group>"; };
 		12E25AF72255BF070046CB1C /* Transcript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transcript.swift; sourceTree = "<group>"; };
 		12E25AF82255BF070046CB1C /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		12E25B142255CAB30046CB1C /* ViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ViewController.storyboard; sourceTree = "<group>"; };
 		12E25B152255CAB30046CB1C /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		372C779522EAF9E50072BC7F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../../../../System/Volumes/Data/Users/masatakanakagawa/Documents/Messagestore/Sample/AppDelegate.swift; sourceTree = "<group>"; };
 		5813450E231EDFC256E5E2ED /* Pods-Messagestore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messagestore.debug.xcconfig"; path = "Target Support Files/Pods-Messagestore/Pods-Messagestore.debug.xcconfig"; sourceTree = "<group>"; };
 		62D5187A18672521346A180E /* Pods_Messagestore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messagestore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E773DFEFED15D0649FDAF2B /* Pods-MessagestoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MessagestoreTests.debug.xcconfig"; path = "Target Support Files/Pods-MessagestoreTests/Pods-MessagestoreTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -240,9 +238,7 @@
 		12E25ADE2255BEED0046CB1C /* Sample */ = {
 			isa = PBXGroup;
 			children = (
-				12E25AF62255BF070046CB1C /* AppDelegate.swift */,
 				12E25AF32255BF060046CB1C /* BoxViewController.swift */,
-				12E25AF52255BF070046CB1C /* GoogleService-Info.plist */,
 				12E25AF22255BF060046CB1C /* HeaderCell.swift */,
 				12E25AF02255BF060046CB1C /* HeaderCell.xib */,
 				12E25AF82255BF070046CB1C /* MessageViewController.swift */,
@@ -254,6 +250,7 @@
 				12E25AE62255BEED0046CB1C /* Assets.xcassets */,
 				12E25AE82255BEED0046CB1C /* LaunchScreen.storyboard */,
 				12E25AEB2255BEED0046CB1C /* Info.plist */,
+				372C779522EAF9E50072BC7F /* AppDelegate.swift */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -406,12 +403,11 @@
 			files = (
 				12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */,
 				12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */,
+				372C779C22EAFD7C0072BC7F /* InboxViewCell.xib in Resources */,
 				12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */,
 				12E25B122255C1E70046CB1C /* MessageViewLeftCell.xib in Resources */,
 				12E25B0D2255C1E70046CB1C /* MessagesTitleView.xib in Resources */,
 				12E25B0B2255C1E70046CB1C /* MessageViewRightCell.xib in Resources */,
-				12E25AFF2255BF070046CB1C /* GoogleService-Info.plist in Resources */,
-				12E25B082255C1E40046CB1C /* InboxViewCell.xib in Resources */,
 				12E25B162255CAB30046CB1C /* ViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,7 +533,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				372C779722EAFA050072BC7F /* AppDelegate.swift in Sources */,
 				12E25AFD2255BF070046CB1C /* BoxViewController.swift in Sources */,
+				372C779E22EAFD820072BC7F /* InboxViewCell.swift in Sources */,
 				12E25B022255BF070046CB1C /* MessageViewController.swift in Sources */,
 				12E25B132255C1E70046CB1C /* MessagesTitleView.swift in Sources */,
 				12E25B062255C1E10046CB1C /* UserProtocol.swift in Sources */,
@@ -548,12 +546,10 @@
 				12E25B052255C1E10046CB1C /* TranscriptProtocol.swift in Sources */,
 				12E25B032255C1E10046CB1C /* Message.swift in Sources */,
 				12E25AFE2255BF070046CB1C /* User.swift in Sources */,
-				12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */,
-				12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */,
 				12E25B042255C1E10046CB1C /* RoomProtocol.swift in Sources */,
 				12E25B0F2255C1E70046CB1C /* MessagesViewController.swift in Sources */,
-				12E25B002255BF070046CB1C /* AppDelegate.swift in Sources */,
 				12E25B0A2255C1E70046CB1C /* MessageViewCell.swift in Sources */,
+				372C779D22EAFD7F0072BC7F /* InboxViewController.swift in Sources */,
 				12E25B0E2255C1E70046CB1C /* MessagesViewFlowLayout.swift in Sources */,
 				12E25B172255CAB30046CB1C /* ViewController.swift in Sources */,
 				12E25B012255BF070046CB1C /* Transcript.swift in Sources */,
@@ -812,7 +808,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = team.stamp.Sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nakagawa.MessageStoreSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -831,7 +827,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = team.stamp.Sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nakagawa.MessageStoreSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

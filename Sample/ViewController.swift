@@ -21,9 +21,13 @@ class ViewController: UIViewController {
 
         guard let userID: String = textField.text else { return }
 
-        var room: Document<Room> = Document()
+        let room: Document<Room> = Document()
         room[\.members] = [userID, user.uid]
-        room.save() { [weak self] (_) in
+        room.save() { [weak self] (error) in
+            if let error = error {
+                print(error)
+                return
+            }
             self?.navigationController?.popViewController(animated: true)
         }
     }
