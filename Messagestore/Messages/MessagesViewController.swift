@@ -462,6 +462,7 @@ extension Message {
         
         open func textViewDidChange(_ textView: UITextView) {
             let size: CGSize = textView.sizeThatFits(textView.bounds.size)
+            textView.isScrollEnabled = size.height > self.toolBar.maximumHeight
             if let constraint: NSLayoutConstraint = self.constraint {
                 textView.removeConstraint(constraint)
             }
