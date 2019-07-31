@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1215F31122F174BD0075B47A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1215F31022F174BD0075B47A /* AppDelegate.swift */; };
 		12D75CBB22546248004D1AC4 /* Messagestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12D75CB122546247004D1AC4 /* Messagestore.framework */; };
 		12D75CC022546248004D1AC4 /* MessagestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CBF22546248004D1AC4 /* MessagestoreTests.swift */; };
 		12D75CC222546248004D1AC4 /* Messagestore.h in Headers */ = {isa = PBXBuildFile; fileRef = 12D75CB422546247004D1AC4 /* Messagestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -35,7 +36,6 @@
 		12E25AFD2255BF070046CB1C /* BoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF32255BF060046CB1C /* BoxViewController.swift */; };
 		12E25AFE2255BF070046CB1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF42255BF070046CB1C /* User.swift */; };
 		12E25AFF2255BF070046CB1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AF52255BF070046CB1C /* GoogleService-Info.plist */; };
-		12E25B002255BF070046CB1C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF62255BF070046CB1C /* AppDelegate.swift */; };
 		12E25B012255BF070046CB1C /* Transcript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF72255BF070046CB1C /* Transcript.swift */; };
 		12E25B022255BF070046CB1C /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E25AF82255BF070046CB1C /* MessageViewController.swift */; };
 		12E25B032255C1E10046CB1C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCE225463B2004D1AC4 /* Message.swift */; };
@@ -73,6 +73,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1215F31022F174BD0075B47A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		12D75CB122546247004D1AC4 /* Messagestore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Messagestore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12D75CB422546247004D1AC4 /* Messagestore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Messagestore.h; sourceTree = "<group>"; };
 		12D75CB522546247004D1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,7 +107,6 @@
 		12E25AF32255BF060046CB1C /* BoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoxViewController.swift; sourceTree = "<group>"; };
 		12E25AF42255BF070046CB1C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		12E25AF52255BF070046CB1C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		12E25AF62255BF070046CB1C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../Muni/Sample/AppDelegate.swift; sourceTree = "<group>"; };
 		12E25AF72255BF070046CB1C /* Transcript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transcript.swift; sourceTree = "<group>"; };
 		12E25AF82255BF070046CB1C /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		12E25B142255CAB30046CB1C /* ViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ViewController.storyboard; sourceTree = "<group>"; };
@@ -240,7 +240,7 @@
 		12E25ADE2255BEED0046CB1C /* Sample */ = {
 			isa = PBXGroup;
 			children = (
-				12E25AF62255BF070046CB1C /* AppDelegate.swift */,
+				1215F31022F174BD0075B47A /* AppDelegate.swift */,
 				12E25AF32255BF060046CB1C /* BoxViewController.swift */,
 				12E25AF52255BF070046CB1C /* GoogleService-Info.plist */,
 				12E25AF22255BF060046CB1C /* HeaderCell.swift */,
@@ -552,10 +552,10 @@
 				12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */,
 				12E25B042255C1E10046CB1C /* RoomProtocol.swift in Sources */,
 				12E25B0F2255C1E70046CB1C /* MessagesViewController.swift in Sources */,
-				12E25B002255BF070046CB1C /* AppDelegate.swift in Sources */,
 				12E25B0A2255C1E70046CB1C /* MessageViewCell.swift in Sources */,
 				12E25B0E2255C1E70046CB1C /* MessagesViewFlowLayout.swift in Sources */,
 				12E25B172255CAB30046CB1C /* ViewController.swift in Sources */,
+				1215F31122F174BD0075B47A /* AppDelegate.swift in Sources */,
 				12E25B012255BF070046CB1C /* Transcript.swift in Sources */,
 				12E25AFB2255BF070046CB1C /* Room.swift in Sources */,
 			);
