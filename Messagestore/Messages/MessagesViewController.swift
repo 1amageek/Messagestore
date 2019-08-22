@@ -151,14 +151,11 @@ extension Message {
         public init(room: Document<RoomType>, fetching limit: Int = 20) {
             self.limit = limit
             self.room = room
-            let option: DataSource<Document<TranscriptType>>.Option = DataSource.Option()
-            option.sortClosure = { $0.updatedAt < $1.updatedAt }
-            option.listeningChangeTypes = [.added, .modified]
-
             self.dataSource = DataSource<Document<TranscriptType>>.Query(room.documentReference.collection("transcripts"))
                 .order(by: "updatedAt", descending: true)
                 .limit(to: limit)
-                .dataSource(option: option)
+                .dataSource()
+                .sorted(by: { $0.updatedAt < $1.updatedAt })
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -171,7 +168,11 @@ extension Message {
             self.textView.delegate = self
             let collectionViewLayout: MessagesViewFlowLayout = MessagesViewFlowLayout()
             self.collectionView = MessagesView(frame: self.view.bounds, collectionViewLayout: collectionViewLayout)
-            self.collectionView.backgroundColor = .white
+            if #available(iOS 13.0, *) {
+                self.collectionView.backgroundColor = UIColor.systemBackground
+            } else {
+                self.collectionView.backgroundColor = .white
+            }
             self.collectionView.delegate = self
             self.collectionView.dataSource = self
             self.collectionView.prefetchDataSource = self
@@ -191,39 +192,31 @@ extension Message {
             self.navigationItem.titleView = self.titleView
             self.addKeyboardObservers()
             self.dataSource
-                //                .on { (_, transcript, done) in
-                //
-                //            }
-                .on { [weak self] (snapshot, changes) in
-                    guard let collectionView: MessagesView = self?.collectionView else { return }
-                    guard let dataSource: DataSource<Document<TranscriptType>> = self?.dataSource else { return }
-                    guard let section: Int = self?.targetSection else { return }
-                    switch changes {
-                    case .initial:
-                        collectionView.reloadData()
-                        collectionView.setNeedsLayout()
-                        collectionView.layoutIfNeeded()
-                        collectionView.scrollToBottom()
-                        self?.didInitialize(of: dataSource)
-                    case .update(let deletions, let insertions, let modifications):
-                        collectionView.performBatchUpdates({
-                            collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: section) })
-                            collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: section) })
-                            collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: section) })
-                            collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-                            if snapshot?.metadata.hasPendingWrites ?? false {
-                                collectionView.scrollToBottom(animated: true)
-                            }
-                        }, completion: nil)
-                    case .error(let error):
-                        print(error)
+                .retrieve(from: { (snapshot, documentSnapshot, done) in
+                    let document: Document<TranscriptType> = Document(documentSnapshot.reference)
+                    document.get { (item, error) in
+                        done(item!)
                     }
-                }.onCompleted { [weak self] (snapshot, _) in
+                })
+                .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
+                    guard let collectionView: MessagesView = self?.collectionView else { return }
+                    guard let section: Int = self?.targetSection else { return }
+                    collectionView.performBatchUpdates({
+                        collectionView.insertItems(at: dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) })
+                        collectionView.deleteItems(at: dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) })
+                        collectionView.reloadItems(at: dataSourceSnapshot.changes.modifications.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) })
+                        collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
+                        if snapshot?.metadata.hasPendingWrites ?? false {
+                            collectionView.scrollToBottom(animated: true)
+                        }
+                    }, completion: nil)
+
                     self?.isLoading = false
                     if !(snapshot?.metadata.hasPendingWrites ?? true) {
                         self?.markAsRead()
                     }
-            }
+                })
+
         }
 
         open override func viewWillAppear(_ animated: Bool) {

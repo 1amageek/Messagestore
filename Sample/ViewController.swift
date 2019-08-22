@@ -29,6 +29,9 @@ class ViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = UIColor.systemBackground
+        }
         guard let user: FirebaseAuth.User = Auth.auth().currentUser else { return }
         self.idField.text = user.uid
 

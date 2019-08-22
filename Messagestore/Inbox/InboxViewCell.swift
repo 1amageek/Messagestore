@@ -20,10 +20,18 @@ open class InboxViewCell: UITableViewCell {
             switch format {
             case .normal:
                 self.messageLabel.font = UIFont.systemFont(ofSize: 14)
-                self.messageLabel.textColor = UIColor.darkGray
+                if #available(iOS 13.0, *) {
+                    self.messageLabel.textColor = UIColor.label
+                } else {
+                    self.messageLabel.textColor = UIColor.darkText
+                }
             case .bold:
                 self.messageLabel.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-                self.messageLabel.textColor = UIColor.darkText
+                if #available(iOS 13.0, *) {
+                    self.messageLabel.textColor = UIColor.label
+                } else {
+                    self.messageLabel.textColor = UIColor.darkText
+                }
             }
             self.setNeedsLayout()
         }

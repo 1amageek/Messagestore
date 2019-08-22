@@ -68,15 +68,13 @@ extension Message {
         /// - Returns: Returns the DataSource with Query set.
         open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<Document<RoomType>> {
             let option: DataSource<Document<RoomType>>.Option = DataSource.Option()
-            option.sortClosure = { l, r in
-                return l.updatedAt > r.updatedAt
-            }
             return Document<RoomType>
                 .order(by: "updatedAt", descending: true)
                 .where("members", arrayContains: userID)
                 .where("isHidden", isEqualTo: false)
                 .limit(to: limit)
                 .dataSource(option: option)
+                .sorted(by: {$0.updatedAt > $1.updatedAt})
         }
 
         public required init?(coder aDecoder: NSCoder) {
@@ -91,30 +89,36 @@ extension Message {
 
         open override func viewDidLoad() {
             super.viewDidLoad()
+            if #available(iOS 13.0, *) {
+                self.tableView.backgroundColor = UIColor.systemBackground
+            }
             self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.rowHeight = UITableView.automaticDimension
-
+            let section: Int = self.targetSection
             self.dataSource
-//                .on { (_, room, done) in
-//
-//                }
-                .on({ [weak self] (snapshot, changes) in
+                .retrieve(from: { (snapshot, documentSnapshot, done) in
+                    let document: Document<RoomType> = Document(documentSnapshot.reference)
+                    document.get { (item, error) in
+                        done(item!)
+                    }
+                })
+                .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
+                    guard let snapshot = snapshot else { return }
                     guard let tableView: UITableView = self?.tableView else { return }
-                    guard let dataSource: DataSource<Document<RoomType>> = self?.dataSource else { return }
-                    guard let section: Int = self?.targetSection else { return }
-                    switch changes {
-                    case .initial:
-                        tableView.reloadData()
-                        self?.didInitialize(of: dataSource)
-                    case .update(let deletions, let insertions, let modifications):
-                        tableView.beginUpdates()
-                        tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: section) }, with: .automatic)
-                        tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: section) }, with: .automatic)
-                        tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: section) }, with: .automatic)
-                        tableView.endUpdates()
-                    case .error(let error):
-                        print(error)
+                    if !snapshot.metadata.hasPendingWrites {
+                        tableView.performBatchUpdates({
+                            tableView.insertRows(at: dataSourceSnapshot.changes.insertions.map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}, with: .automatic)
+                            tableView.deleteRows(at: dataSourceSnapshot.changes.deletions.map { IndexPath(item: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section)}, with: .automatic)
+                        }, completion: nil)
+                        dataSourceSnapshot.changes.modifications
+                            .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
+                            .filter { (tableView.indexPathsForVisibleRows ?? []).contains($0) }
+                            .forEach { indexPath in
+                                if let cell: UITableViewCell = tableView.cellForRow(at: indexPath) {
+                                    self?.configure(cell: cell, for: indexPath)
+                                }
+                        }
                     }
                 })
         }
@@ -187,17 +191,23 @@ extension Message {
         }
 
         open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let room: Document<RoomType> = self.dataSource[indexPath.item]
             let cell: InboxViewCell = tableView.dequeueReusableCell(withIdentifier: "InboxViewCell", for: indexPath) as! InboxViewCell
+            configure(cell: cell, for: indexPath)
+            return cell
+        }
+
+        open func configure(cell: UITableViewCell, for indexPath: IndexPath) {
+            guard let cell: InboxViewCell = cell as? InboxViewCell else { return }
+            let room: Document<RoomType> = self.dataSource[indexPath.item]
             cell.dateLabel.text = self.dateFormatter.string(from: room.updatedAt.dateValue())
             if let name: String = room.data?.name {
                 cell.nameLabel.text = name
             }
-//            else if let config: [String: Any] = room.config[self.userID] as? [String: Any] {
-//                if let nameKey: String = RoomType.configNameKey {
-//                    cell.nameLabel.text = config[nameKey] as? String
-//                }
-//            }
+            //            else if let config: [String: Any] = room.config[self.userID] as? [String: Any] {
+            //                if let nameKey: String = RoomType.configNameKey {
+            //                    cell.nameLabel.text = config[nameKey] as? String
+            //                }
+            //            }
             if let text: String = room.data?.recentTranscript?.text {
                 cell.messageLabel?.text = text
             }
@@ -211,7 +221,6 @@ extension Message {
             } else {
                 cell.format = .bold
             }
-            return cell
         }
 
         open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
