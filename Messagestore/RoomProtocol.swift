@@ -25,9 +25,6 @@ public protocol RoomProtocol {
     /// It is a member who can see the conversation.
     var members: [String] { get set }
 
-    /// Record the last time the viewer saw it.
-    var lastViewedTimestamps: [String: ServerTimestamp] { get set }
-
     /// It holds the last Transcript.
     var lastTranscript: TranscriptType? { get set }
 

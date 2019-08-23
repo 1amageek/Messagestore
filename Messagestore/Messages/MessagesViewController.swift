@@ -27,7 +27,10 @@ extension Message {
         public let limit: Int
         
         /// Returns the DataSource of Transcript.
-        public var dataSource: DataSource<Document<TranscriptType>>!
+        public var transcripts: DataSource<Document<TranscriptType>>!
+
+        /// Returns the DataSource of Member.
+        public var members: DataSource<Document<UserType>>!
         
         /// Returns a CollectionView that displays a message.
         public private(set) var collectionView: MessagesView!
@@ -64,7 +67,7 @@ extension Message {
         public var isLoading: Bool = false {
             didSet {
                 if isLoading != oldValue, isLoading {
-                    self.dataSource?.next()
+                    self.transcripts?.next()
                 }
             }
         }
@@ -146,11 +149,17 @@ extension Message {
         public init(room: Document<RoomType>, fetching limit: Int = 20) {
             self.limit = limit
             self.room = room
-            self.dataSource = DataSource<Document<TranscriptType>>.Query(room.documentReference.collection("transcripts"))
+            self.transcripts = DataSource<Document<TranscriptType>>.Query(room.documentReference.collection("transcripts"))
                 .order(by: "updatedAt", descending: true)
                 .limit(to: limit)
                 .dataSource()
                 .sorted(by: { $0.updatedAt < $1.updatedAt })
+
+            self.members = DataSource<Document<UserType>>.Query(room.documentReference.collection("members"))
+                .order(by: "updatedAt", descending: true)
+                .dataSource()
+                .sorted(by: { $0.updatedAt < $1.updatedAt })
+
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -186,9 +195,9 @@ extension Message {
             super.viewDidLoad()
             self.navigationItem.titleView = self.titleView
             self.addKeyboardObservers()
-            self.dataSource
+            self.transcripts
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
-                    let document: Document<TranscriptType> = Document(documentSnapshot.reference)
+                    let document: Document<TranscriptType> = Document(snapshot: documentSnapshot)!
                     document.get { (item, error) in
                         if let error = error {
                             print(error)
@@ -202,17 +211,17 @@ extension Message {
                     guard let collectionView: MessagesView = self?.collectionView else { return }
                     guard let section: Int = self?.targetSection else { return }
                     guard let snapshot = snapshot else { return }
-                    guard let dataSource: DataSource<Document<TranscriptType>> = self?.dataSource else { return }
+                    guard let dataSource: DataSource<Document<TranscriptType>> = self?.transcripts else { return }
 
                     let insertIndexPaths: [IndexPath] = dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) }
                     let deleteIndexPaths: [IndexPath] = dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) }
 
-                    if insertIndexPaths.contains(IndexPath(item: 0, section: section)) || deleteIndexPaths.contains(IndexPath(item: 0, section: section)) {
+                    if insertIndexPaths.contains(IndexPath(item: 0, section: section)) {
                         collectionView.reloadData()
                     } else {
                         collectionView.performBatchUpdates({
                             collectionView.insertItems(at: insertIndexPaths)
-                            collectionView.deleteItems(at: insertIndexPaths)
+                            collectionView.deleteItems(at: deleteIndexPaths)
                             if snapshot.metadata.hasPendingWrites {
                                 collectionView.scrollToBottom(animated: true)
                             }
@@ -274,13 +283,19 @@ extension Message {
 
         /// Start listening
         open func listen() {
-            self.dataSource.listen()
+            self.transcripts.listen()
         }
         
         open func markAsRead() {
             guard let uid: String = self.senderID else { return }
-            self.room.data?.lastViewedTimestamps[uid] = .pending
-            self.room.update()
+            let document: Document<UserType> = Document(room.documentReference.collection("members").document(uid))
+            document.get { (document, error) in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                document?.update()
+            }
         }
         
         /// It is called after the first fetch of the data source is finished.
@@ -335,7 +350,7 @@ extension Message {
         }
         
         open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return self.dataSource.count
+            return self.transcripts.count
         }
 
         open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -368,7 +383,7 @@ extension Message {
             }
 
             if indexPath.section == self.targetSection {
-                let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
+                let transcript: Document<TranscriptType> = self.transcripts[indexPath.item]
                 if transcript.data?.from == senderID {
                     let cell: MessageViewRightCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageViewRightCell", for: indexPath) as! MessageViewRightCell
                     configure(cell: cell, forAt: indexPath)
@@ -385,13 +400,13 @@ extension Message {
 
         open func configure(cell: UICollectionViewCell, forAt indexPath: IndexPath) {
             if indexPath.section == self.targetSection {
-                let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
+                let transcript: Document<TranscriptType> = self.transcripts[indexPath.item]
                 var day: String? = nil
                 if indexPath.item == 0 {
                     day = self.dateFormatter.string(from: transcript.updatedAt.dateValue())
                 } else if indexPath.item > 0 {
                     let previousIndex: Int = indexPath.item - 1
-                    let previousTranscript: Document<TranscriptType> = self.dataSource[previousIndex]
+                    let previousTranscript: Document<TranscriptType> = self.transcripts[previousIndex]
                     let previousDateComponents: DateComponents = self.calendar.dateComponents(in: TimeZone.current, from: previousTranscript.updatedAt.dateValue())
                     let dateComponents: DateComponents = self.calendar.dateComponents(in: TimeZone.current, from: transcript.updatedAt.dateValue())
                     if dateComponents.day != previousDateComponents.day {
@@ -429,7 +444,7 @@ extension Message {
             }
 
             if indexPath.section == self.targetSection {
-                let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
+                let transcript: Document<TranscriptType> = self.transcripts[indexPath.item]
                 if transcript.data?.from == senderID {
                     let cell: MessageViewRightCell = UINib(nibName: "MessageViewRightCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageViewRightCell
                     configure(cell: cell, forAt: indexPath)
@@ -503,7 +518,7 @@ extension Message {
                 return
             }
             if canLoadNextToDataSource && scrollView.contentOffset.y < threshold && !scrollView.isDecelerating {
-                if !self.dataSource.isLast && self.limit <= self.dataSource.count {
+                if !self.transcripts.isLast && self.limit <= self.transcripts.count {
                     self.isLoading = true
                     self.canLoadNextToDataSource = false
                 }

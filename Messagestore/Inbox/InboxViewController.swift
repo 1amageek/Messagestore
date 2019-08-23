@@ -73,7 +73,7 @@ extension Message {
                 .where("isHidden", isEqualTo: false)
                 .limit(to: limit)
                 .dataSource()
-                .sorted(by: {$0.updatedAt > $1.updatedAt})
+                .sorted(by: { $0.data!.lastTranscriptReceivedAt.rawValue > $1.data!.lastTranscriptReceivedAt.rawValue })
         }
 
         public required init?(coder aDecoder: NSCoder) {
@@ -97,7 +97,7 @@ extension Message {
             let section: Int = self.targetSection
             self.dataSource
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
-                    let document: Document<RoomType> = Document(documentSnapshot.reference)
+                    let document: Document<RoomType> = Document(snapshot: documentSnapshot)!
                     document.get { (item, error) in
                         if let error = error {
                             print(error)
@@ -110,19 +110,36 @@ extension Message {
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
                     guard let snapshot = snapshot else { return }
                     guard let tableView: UITableView = self?.tableView else { return }
+                    
                     if !snapshot.metadata.hasPendingWrites {
+
+                        let insertIndexPaths: [IndexPath] = dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) }
+                        let deleteIndexPaths: [IndexPath] = dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) }
+
+//                        print("0", snapshot.documentChanges.map { $0.type.rawValue })
+//                        print("a", dataSourceSnapshot.changes.insertions)
+//                        print("b", dataSourceSnapshot.after)
+//                        print("c", dataSourceSnapshot.changes.modifications)
+//                        print(insertIndexPaths)
+//                        print(deleteIndexPaths)
+
+
                         tableView.performBatchUpdates({
-                            tableView.insertRows(at: dataSourceSnapshot.changes.insertions.map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}, with: .automatic)
-                            tableView.deleteRows(at: dataSourceSnapshot.changes.deletions.map { IndexPath(item: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section)}, with: .automatic)
+                            tableView.insertRows(at: insertIndexPaths, with: .automatic)
+                            tableView.deleteRows(at: deleteIndexPaths, with: .automatic)
                         }, completion: nil)
 
-                        dataSourceSnapshot.changes.modifications
-                            .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
-                            .filter { (tableView.indexPathsForVisibleRows ?? []).contains($0) }
-                            .forEach { indexPath in
-                                if let cell: UITableViewCell = tableView.cellForRow(at: indexPath) {
-                                    self?.configure(cell: cell, forAt: indexPath)
-                                }
+                        if dataSourceSnapshot.before == dataSourceSnapshot.after {
+                            dataSourceSnapshot.changes.modifications
+                                .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
+                                .filter { (tableView.indexPathsForVisibleRows ?? []).contains($0) }
+                                .forEach { indexPath in
+                                    if let cell: UITableViewCell = tableView.cellForRow(at: indexPath) {
+                                        self?.configure(cell: cell, forAt: indexPath)
+                                    }
+                            }
+                        } else {
+                            print("aaaaaaa")
                         }
                     }
                 })
@@ -211,15 +228,25 @@ extension Message {
             if let text: String = room.data?.lastTranscript?.text {
                 cell.messageLabel?.text = text
             }
-            if let lastViewedTimestamps = room.data?.lastViewedTimestamps {
-                if let lastViewedTimestamp = lastViewedTimestamps[self.userID] {
-                    cell.format = lastViewedTimestamp.rawValue > room.updatedAt ? .normal : .normal
+
+            // Read
+            let document: Document<UserType> = Document(room.documentReference.collection("members").document(userID))
+            document.get { (member, error) in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                if let timestamp = member?.updatedAt, let lastTranscriptReceivedAt = room.data?.lastTranscriptReceivedAt {
+                    if timestamp < lastTranscriptReceivedAt.rawValue {
+                        cell.format = .bold
+                    } else {
+                        cell.format = .normal
+                    }
                 } else {
                     cell.format = .bold
                 }
-            } else {
-                cell.format = .bold
             }
+            cell.setNeedsDisplay()
         }
 
         open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

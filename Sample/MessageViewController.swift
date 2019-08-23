@@ -57,7 +57,7 @@ class MessageViewController: Message<User, Room, Transcript>.MessagesViewControl
         switch section {
         case 0: return 0
         case 1:
-            return self.dataSource.count
+            return self.transcripts.count
         default: return 0
         }
     }
