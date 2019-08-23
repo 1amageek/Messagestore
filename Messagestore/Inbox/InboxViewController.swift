@@ -116,14 +116,6 @@ extension Message {
                         let insertIndexPaths: [IndexPath] = dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) }
                         let deleteIndexPaths: [IndexPath] = dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) }
 
-//                        print("0", snapshot.documentChanges.map { $0.type.rawValue })
-//                        print("a", dataSourceSnapshot.changes.insertions)
-//                        print("b", dataSourceSnapshot.after)
-//                        print("c", dataSourceSnapshot.changes.modifications)
-//                        print(insertIndexPaths)
-//                        print(deleteIndexPaths)
-
-
                         tableView.performBatchUpdates({
                             tableView.insertRows(at: insertIndexPaths, with: .automatic)
                             tableView.deleteRows(at: deleteIndexPaths, with: .automatic)
@@ -139,7 +131,24 @@ extension Message {
                                     }
                             }
                         } else {
-                            print("aaaaaaa")
+                            for (beforeIndex, beforeRoom) in dataSourceSnapshot.before.enumerated() {
+                                for (afterIndex, afterRoom) in dataSourceSnapshot.after.enumerated() {
+                                    if beforeRoom.id == afterRoom.id {
+                                        let atIndexPath: IndexPath = IndexPath(row: beforeIndex, section: section)
+                                        let toIndexPath: IndexPath = IndexPath(row: afterIndex, section: section)
+                                        tableView.performBatchUpdates({
+                                            tableView.moveRow(at: atIndexPath, to: toIndexPath)
+                                        }, completion: nil)
+                                        if let cell: UITableViewCell = tableView.cellForRow(at: atIndexPath) {
+                                            self?.configure(cell: cell, forAt: atIndexPath)
+                                        }
+                                        if let cell: UITableViewCell = tableView.cellForRow(at: toIndexPath) {
+                                            self?.configure(cell: cell, forAt: toIndexPath)
+                                        }
+                                        return
+                                    }
+                                }
+                            }
                         }
                     }
                 })
