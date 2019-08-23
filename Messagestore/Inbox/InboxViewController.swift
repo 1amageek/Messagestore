@@ -67,13 +67,12 @@ extension Message {
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
         open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<Document<RoomType>> {
-            let option: DataSource<Document<RoomType>>.Option = DataSource.Option()
             return Document<RoomType>
-                .order(by: "updatedAt", descending: true)
+                .order(by: "lastTranscriptReceivedAt", descending: true)
                 .where("members", arrayContains: userID)
                 .where("isHidden", isEqualTo: false)
                 .limit(to: limit)
-                .dataSource(option: option)
+                .dataSource()
                 .sorted(by: {$0.updatedAt > $1.updatedAt})
         }
 
@@ -100,7 +99,12 @@ extension Message {
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
                     let document: Document<RoomType> = Document(documentSnapshot.reference)
                     document.get { (item, error) in
-                        done(item!)
+                        if let error = error {
+                            print(error)
+                            done(document)
+                            return
+                        }
+                        done(item ?? document)
                     }
                 })
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
@@ -111,12 +115,13 @@ extension Message {
                             tableView.insertRows(at: dataSourceSnapshot.changes.insertions.map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}, with: .automatic)
                             tableView.deleteRows(at: dataSourceSnapshot.changes.deletions.map { IndexPath(item: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section)}, with: .automatic)
                         }, completion: nil)
+
                         dataSourceSnapshot.changes.modifications
                             .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
                             .filter { (tableView.indexPathsForVisibleRows ?? []).contains($0) }
                             .forEach { indexPath in
                                 if let cell: UITableViewCell = tableView.cellForRow(at: indexPath) {
-                                    self?.configure(cell: cell, for: indexPath)
+                                    self?.configure(cell: cell, forAt: indexPath)
                                 }
                         }
                     }
@@ -192,29 +197,23 @@ extension Message {
 
         open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell: InboxViewCell = tableView.dequeueReusableCell(withIdentifier: "InboxViewCell", for: indexPath) as! InboxViewCell
-            configure(cell: cell, for: indexPath)
+            configure(cell: cell, forAt: indexPath)
             return cell
         }
 
-        open func configure(cell: UITableViewCell, for indexPath: IndexPath) {
+        open func configure(cell: UITableViewCell, forAt indexPath: IndexPath) {
             guard let cell: InboxViewCell = cell as? InboxViewCell else { return }
             let room: Document<RoomType> = self.dataSource[indexPath.item]
             cell.dateLabel.text = self.dateFormatter.string(from: room.updatedAt.dateValue())
             if let name: String = room.data?.name {
                 cell.nameLabel.text = name
             }
-            //            else if let config: [String: Any] = room.config[self.userID] as? [String: Any] {
-            //                if let nameKey: String = RoomType.configNameKey {
-            //                    cell.nameLabel.text = config[nameKey] as? String
-            //                }
-            //            }
-            if let text: String = room.data?.recentTranscript?.text {
+            if let text: String = room.data?.lastTranscript?.text {
                 cell.messageLabel?.text = text
             }
             if let lastViewedTimestamps = room.data?.lastViewedTimestamps {
                 if let lastViewedTimestamp = lastViewedTimestamps[self.userID] {
                     cell.format = lastViewedTimestamp.rawValue > room.updatedAt ? .normal : .normal
-
                 } else {
                     cell.format = .bold
                 }

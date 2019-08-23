@@ -58,11 +58,6 @@ extension Message {
             if let name: String = self.room.data?.name {
                 titleView.nameLabel.text = name
             }
-//            else if let config: [String: Any] = room.config[senderID] as? [String: Any] {
-//                if let nameKey: String = RoomType.configNameKey {
-//                    titleView.nameLabel.text = config[nameKey] as? String
-//                }
-//            }
             return titleView
         }()
         
@@ -195,24 +190,54 @@ extension Message {
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
                     let document: Document<TranscriptType> = Document(documentSnapshot.reference)
                     document.get { (item, error) in
-                        done(item!)
+                        if let error = error {
+                            print(error)
+                            done(document)
+                            return
+                        }
+                        done(item ?? document)
                     }
                 })
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
                     guard let collectionView: MessagesView = self?.collectionView else { return }
                     guard let section: Int = self?.targetSection else { return }
-                    collectionView.performBatchUpdates({
-                        collectionView.insertItems(at: dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) })
-                        collectionView.deleteItems(at: dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) })
-                        collectionView.reloadItems(at: dataSourceSnapshot.changes.modifications.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) })
-                        collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-                        if snapshot?.metadata.hasPendingWrites ?? false {
-                            collectionView.scrollToBottom(animated: true)
+                    guard let snapshot = snapshot else { return }
+                    guard let dataSource: DataSource<Document<TranscriptType>> = self?.dataSource else { return }
+
+                    let insertIndexPaths: [IndexPath] = dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) }
+                    let deleteIndexPaths: [IndexPath] = dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) }
+
+                    if insertIndexPaths.contains(IndexPath(item: 0, section: section)) || deleteIndexPaths.contains(IndexPath(item: 0, section: section)) {
+                        collectionView.reloadData()
+                    } else {
+                        collectionView.performBatchUpdates({
+                            collectionView.insertItems(at: insertIndexPaths)
+                            collectionView.deleteItems(at: insertIndexPaths)
+                            if snapshot.metadata.hasPendingWrites {
+                                collectionView.scrollToBottom(animated: true)
+                            }
+                        }, completion: nil)
+
+                        dataSourceSnapshot.changes.modifications
+                            .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
+                            .filter { (collectionView.indexPathsForVisibleItems).contains($0) }
+                            .forEach { indexPath in
+                                if let cell: UICollectionViewCell = collectionView.cellForItem(at: indexPath) {
+                                    self?.configure(cell: cell, forAt: indexPath)
+                                }
                         }
-                    }, completion: nil)
+                    }
+                    
+                    if snapshot.metadata.isFromCache && !snapshot.metadata.hasPendingWrites {
+                        collectionView.reloadData()
+                        collectionView.setNeedsLayout()
+                        collectionView.layoutIfNeeded()
+                        collectionView.scrollToBottom()
+                        self?.didInitialize(of: dataSource)
+                    }
 
                     self?.isLoading = false
-                    if !(snapshot?.metadata.hasPendingWrites ?? true) {
+                    if !snapshot.metadata.isFromCache && !snapshot.metadata.hasPendingWrites {
                         self?.markAsRead()
                     }
                 })
@@ -233,7 +258,6 @@ extension Message {
 
         open override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
-            self.markAsRead()
         }
 
         open override func viewWillDisappear(_ animated: Bool) {
@@ -279,7 +303,8 @@ extension Message {
                 return
             }
             self.transcript(transcript, willSendTo: room, with: batch)
-            self.room.data?.recentTranscript = transcript.data
+            self.room.data?.lastTranscriptReceivedAt = .pending
+            self.room.data?.lastTranscript = transcript.data
             batch.save(transcript)
             batch.update(self.room)
             batch.commit { [weak self] (error) in
@@ -344,52 +369,21 @@ extension Message {
 
             if indexPath.section == self.targetSection {
                 let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
-                var day: String? = nil
-                if indexPath.item == 0 {
-                    day = self.dateFormatter.string(from: transcript.updatedAt.dateValue())
-                } else if indexPath.item > 0 {
-                    let previousIndex: Int = indexPath.item - 1
-                    let previousTranscript: Document<TranscriptType> = self.dataSource[previousIndex]
-                    let previousDateComponents: DateComponents = self.calendar.dateComponents(in: TimeZone.current, from: previousTranscript.updatedAt.dateValue())
-                    let dateComponents: DateComponents = self.calendar.dateComponents(in: TimeZone.current, from: transcript.updatedAt.dateValue())
-                    if dateComponents.day != previousDateComponents.day {
-                        day = self.dateFormatter.string(from: transcript.updatedAt.dateValue())
-                    }
-                }
-
                 if transcript.data?.from == senderID {
                     let cell: MessageViewRightCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageViewRightCell", for: indexPath) as! MessageViewRightCell
-                    if let day: String = day {
-                        cell.titleLabel.text = day
-                        cell.isDateSectionHeaderHidden = false
-                    }
-                    cell.textLabel.text = transcript.data?.text
-                    cell.dateLabel.text = self.timeFormatter.string(from: transcript.updatedAt.dateValue())
+                    configure(cell: cell, forAt: indexPath)
                     return cell
                 } else {
                     let cell: MessageViewLeftCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageViewLeftCell", for: indexPath) as! MessageViewLeftCell
-                    if let day: String = day {
-                        cell.titleLabel.text = day
-                        cell.isDateSectionHeaderHidden = false
-                    }
-                    cell.textLabel.text = transcript.data?.text
-                    cell.dateLabel.text = self.timeFormatter.string(from: transcript.updatedAt.dateValue())
+                    configure(cell: cell, forAt: indexPath)
                     return cell
                 }
             } else {
                 fatalError("[Messagestore] error: targetSection is incorrect..")
             }
         }
-        
-        open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        }
-        
-        open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            guard let senderID: String = self.senderID else {
-                fatalError("[Messagestore] error: You need to override senderID.")
-            }
 
+        open func configure(cell: UICollectionViewCell, forAt indexPath: IndexPath) {
             if indexPath.section == self.targetSection {
                 let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
                 var day: String? = nil
@@ -406,22 +400,45 @@ extension Message {
                 }
 
                 if transcript.data?.from == senderID {
-                    let cell: MessageViewRightCell = UINib(nibName: "MessageViewRightCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageViewRightCell
-                    cell.textLabel.text = transcript.data?.text
+                    guard let cell: MessageViewRightCell = cell as? MessageViewRightCell else { return }
                     if let day: String = day {
                         cell.titleLabel.text = day
                         cell.isDateSectionHeaderHidden = false
                     }
+                    cell.textLabel.text = transcript.data?.text
+                    cell.dateLabel.text = self.timeFormatter.string(from: transcript.updatedAt.dateValue())
+                } else {
+                    guard let cell: MessageViewLeftCell = cell as? MessageViewLeftCell else { return }
+                    if let day: String = day {
+                        cell.titleLabel.text = day
+                        cell.isDateSectionHeaderHidden = false
+                    }
+                    cell.textLabel.text = transcript.data?.text
+                    cell.dateLabel.text = self.timeFormatter.string(from: transcript.updatedAt.dateValue())
+                }
+            }
+        }
+        
+        open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+            return UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        }
+        
+        open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            guard let senderID: String = self.senderID else {
+                fatalError("[Messagestore] error: You need to override senderID.")
+            }
+
+            if indexPath.section == self.targetSection {
+                let transcript: Document<TranscriptType> = self.dataSource[indexPath.item]
+                if transcript.data?.from == senderID {
+                    let cell: MessageViewRightCell = UINib(nibName: "MessageViewRightCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageViewRightCell
+                    configure(cell: cell, forAt: indexPath)
                     var size: CGSize = cell.sizeThatFits(.zero)
                     size.width = UIScreen.main.bounds.width
                     return size
                 } else {
                     let cell: MessageViewLeftCell = UINib(nibName: "MessageViewLeftCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageViewLeftCell
-                    cell.textLabel.text = transcript.data?.text
-                    if let day: String = day {
-                        cell.titleLabel.text = day
-                        cell.isDateSectionHeaderHidden = false
-                    }
+                    configure(cell: cell, forAt: indexPath)
                     var size: CGSize = cell.sizeThatFits(.zero)
                     size.width = UIScreen.main.bounds.width
                     return size

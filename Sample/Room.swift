@@ -16,7 +16,8 @@ struct Room: Modelable, Codable , RoomProtocol {
     var name: String?
     var thumbnailImage: File?
     var members: [String] = []
-    var recentTranscript: Transcript?
+    var lastTranscript: Transcript?
+    var lastTranscriptReceivedAt: ServerTimestamp = .pending
     var isMessagingEnabled: Bool = true
     var isHidden: Bool = false
     var lastViewedTimestamps: [String : ServerTimestamp] = [:]

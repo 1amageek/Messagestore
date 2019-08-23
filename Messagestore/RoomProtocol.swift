@@ -28,20 +28,15 @@ public protocol RoomProtocol {
     /// Record the last time the viewer saw it.
     var lastViewedTimestamps: [String: ServerTimestamp] { get set }
 
-    /// The message most recently spoken is stored.
-    var recentTranscript: TranscriptType? { get set }
+    /// It holds the last Transcript.
+    var lastTranscript: TranscriptType? { get set }
+
+    /// It is the timestamp when the last Transcript was received.
+    var lastTranscriptReceivedAt: ServerTimestamp { get set }
 
     /// Returns if message is possible. default true.
     var isMessagingEnabled: Bool { get set }
 
     /// If it is false, it is not displayed in InBoxViewController.
     var isHidden: Bool { get set }
-
-    /// It keeps the settings for each user.
-    /// For example, in case of two people chatting, if you want to show each other's name and thumbnail, set here.
-    /// ```
-    /// let userConfig: [String: Any] = config[user.id]
-    /// let name: String = userConfig[Room.configNameKey]
-    /// ```
-//    var config: [String: Any] { get set }
 }
