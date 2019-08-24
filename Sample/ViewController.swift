@@ -8,7 +8,7 @@
 
 import UIKit
 import Ballcap
-import FirebaseAuth
+import Firebase
 
 class ViewController: UIViewController {
 
@@ -21,9 +21,17 @@ class ViewController: UIViewController {
 
         guard let userID: String = textField.text else { return }
 
-        var room: Document<Room> = Document()
+        let batch: Batch = Batch()
+        let room: Document<Room> = Document()
         room[\.members] = [userID, user.uid]
-        room.save() { [weak self] (_) in
+        room[\.members]?.forEach({ (uid) in
+            let ref: DocumentReference = room.documentReference.collection("members").document(uid)
+            let member: Document<User> = Document(ref)
+            member.data = User()
+            batch.save(member)
+        })
+        batch.save(room)
+        batch.commit { [weak self] (error) in
             self?.navigationController?.popViewController(animated: true)
         }
     }

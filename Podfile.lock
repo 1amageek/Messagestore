@@ -130,7 +130,7 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - Protobuf (3.9.0)
-  - Toolbar (0.6.1)
+  - Toolbar (0.7.0)
 
 DEPENDENCIES:
   - Ballcap
@@ -192,7 +192,7 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
-  Toolbar: 49165b7511132c7faee4883ad4f40ad5e8945225
+  Toolbar: d07cd033770cb94fc800f223d71815bee581e8ca
 
 PODFILE CHECKSUM: c127c7a679e91cc48366375deafbcd65a7c58569
 
