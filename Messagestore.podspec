@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Messagestore"
-  s.version      = "0.2.0"
+  s.version      = "0.3.0"
   s.summary      = "Firestore message framework"
   s.description  = <<-DESC
 Messagestore is a chat framework made with Firestore.

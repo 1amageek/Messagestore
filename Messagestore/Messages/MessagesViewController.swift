@@ -53,17 +53,6 @@ extension Message {
             return textView
         }()
         
-        open lazy var titleView: MessagesTitleView? = {
-            guard let senderID: String = self.senderID else {
-                fatalError("[Messagestore] error: You need to override senderID.")
-            }
-            let titleView: MessagesTitleView = UINib(nibName: "MessagesTitleView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessagesTitleView
-            if let name: String = self.room.data?.name {
-                titleView.nameLabel.text = name
-            }
-            return titleView
-        }()
-        
         public var isLoading: Bool = false {
             didSet {
                 if isLoading != oldValue, isLoading {
@@ -193,7 +182,6 @@ extension Message {
         
         open override func viewDidLoad() {
             super.viewDidLoad()
-            self.navigationItem.titleView = self.titleView
             self.addKeyboardObservers()
             self.transcripts
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
