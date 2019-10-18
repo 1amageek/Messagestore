@@ -7,8 +7,38 @@
 //
 
 import UIKit
+import Ballcap
+import FirebaseFirestore
+import FirebaseAuth
 
 class AddTopicViewController: UIViewController {
+
+    @IBOutlet weak var textField: UITextField!
+
+    @IBOutlet weak var addButton: UIButton!
+
+    @IBAction func addAction(_ sender: Any) {
+
+        guard let uid: String = Auth.auth().currentUser?.uid else {
+            return
+        }
+
+        let topic: Document<Topic> = Document()
+        topic.data?.title = textField.text
+
+        let member: Document<Member> = Document(id: uid)
+
+        let subscription: Document<Subscription> = Document()
+        subscription.data?.topic = topic.documentReference
+
+
+        let batch: Batch = Batch()
+        batch.save(topic)
+        batch.save(member, to: topic.documentReference.collection("subscribers"))
+        batch.save(subscription, to: Firestore.firestore().document("/user/\(uid)").collection("subscriptions"))
+        batch.commit()
+        self.dismiss(animated: true, completion: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

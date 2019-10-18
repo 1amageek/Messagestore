@@ -14,7 +14,7 @@ import Toolbar
 import Instantiate
 import InstantiateStandard
 
-class MessageViewController: Message<User, Room, Transcript>.MessagesViewController {
+class MessageViewController: Message<Member, Room, Transcript>.MessagesViewController {
 
     var sendBarItem: ToolbarItem!
 

@@ -1,5 +1,5 @@
 //
-//  UserProtocol.swift
+//  MemberProtocol.swift
 //  Messagestore
 //
 //  Created by 1amageek on 2018/07/31.
@@ -10,9 +10,9 @@ import Ballcap
 import FirebaseFirestore
 
 /**
- Define the properties that the `User` object should have.
+ Define the properties that the `Member` object should have.
  */
-public protocol UserProtocol {
+public protocol MemberProtocol {
 
     /// The display name of the user. The display name is used by InboxViewController and MessagesViewController.
     var name: String? { get set }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostViewController: UIViewController {
+class PostViewController: Forum<Member, Topic, Post>.PostsViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

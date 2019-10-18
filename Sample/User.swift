@@ -8,7 +8,7 @@
 
 import Ballcap
 
-struct User: Modelable, Codable, UserProtocol {
+struct Member: Modelable, Codable, MemberProtocol {
 
     var name: String?
 

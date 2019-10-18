@@ -1,7 +1,53 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13142" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="q6X-ka-UWg">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12042"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--Add Topic View Controller-->
+        <scene sceneID="SO1-NG-JdD">
+            <objects>
+                <viewController id="q6X-ka-UWg" customClass="AddTopicViewController" customModule="Sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mwz-dt-XLH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Topic title" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zoa-cK-xhm">
+                                <rect key="frame" x="32" y="294" width="350" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzs-Le-hkA">
+                                <rect key="frame" x="32" y="344" width="350" height="30"/>
+                                <state key="normal" title="Add"/>
+                                <connections>
+                                    <action selector="addAction:" destination="q6X-ka-UWg" eventType="touchUpInside" id="BBN-BL-aQt"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="nzs-Le-hkA" firstAttribute="leading" secondItem="OmP-4Y-a2i" secondAttribute="leading" constant="32" id="8m6-dm-AgR"/>
+                            <constraint firstItem="nzs-Le-hkA" firstAttribute="top" secondItem="Zoa-cK-xhm" secondAttribute="bottom" constant="16" id="RS6-7b-QJ8"/>
+                            <constraint firstItem="Zoa-cK-xhm" firstAttribute="top" secondItem="OmP-4Y-a2i" secondAttribute="top" constant="250" id="TPn-7H-PgW"/>
+                            <constraint firstItem="OmP-4Y-a2i" firstAttribute="trailing" secondItem="Zoa-cK-xhm" secondAttribute="trailing" constant="32" id="a3T-Bt-BRZ"/>
+                            <constraint firstItem="OmP-4Y-a2i" firstAttribute="trailing" secondItem="nzs-Le-hkA" secondAttribute="trailing" constant="32" id="aR1-ZU-h3v"/>
+                            <constraint firstItem="Zoa-cK-xhm" firstAttribute="leading" secondItem="OmP-4Y-a2i" secondAttribute="leading" constant="32" id="jhB-ZU-Pt4"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="OmP-4Y-a2i"/>
+                    </view>
+                    <connections>
+                        <outlet property="addButton" destination="nzs-Le-hkA" id="Ets-wp-BQH"/>
+                        <outlet property="textField" destination="Zoa-cK-xhm" id="MTg-BU-f0a"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5qA-g6-psa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-86.956521739130437" y="49.553571428571423"/>
+        </scene>
+    </scenes>
 </document>

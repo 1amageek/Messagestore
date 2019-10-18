@@ -30,17 +30,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     print(error)
                     return
                 }
-
-                let user: Document<User> = Document(id: result!.user.uid)
+                let userReference: DocumentReference = Firestore.firestore().document("/user/\(result!.user.uid)")
 
                 print("**************************************")
-                print("YOUR ID: ", user.id)
+                print("YOUR ID: ", userReference.documentID)
                 print("**************************************")
-                user.save() { (error) in
-                    let viewController: BoxViewController = BoxViewController(userID: user.id)
+                userReference.setData([:]) { _ in
+                    let viewController: BoxViewController = BoxViewController(userReference: userReference)
                     let navigationController: UINavigationController = UINavigationController(rootViewController: viewController)
+
+                    let forumViewController: ForumViewController = ForumViewController(userReference: userReference)
+                    let forumNavigationController: UINavigationController = UINavigationController(rootViewController: forumViewController)
                     let tabbarController: UITabBarController = UITabBarController(nibName: nil, bundle: nil)
-                    tabbarController.setViewControllers([navigationController], animated: true)
+                    tabbarController.setViewControllers([navigationController, forumNavigationController], animated: true)
                     self?.window?.rootViewController = tabbarController
                     self?.window?.makeKeyAndVisible()
                 }
@@ -52,17 +54,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("YOUR ID: ", user.uid)
         print("**************************************")
 
-        Document<User>.get(id: user.uid) { (user, error) in
-            if user == nil {
-                _ = try! Auth.auth().signOut()
-            }
-        }
-
-        let viewController: BoxViewController = BoxViewController(userID: user.uid)
+//        Document<Member>.get(id: user.uid) { (user, error) in
+//            if user == nil {
+//                _ = try! Auth.auth().signOut()
+//            }
+//        }
+        let userReference: DocumentReference = Firestore.firestore().document("/user/\(user.uid)")
+        let viewController: BoxViewController = BoxViewController(userReference: userReference)
         let navigationController: UINavigationController = UINavigationController(rootViewController: viewController)
 //        navigationController.navigationBar.isTranslucent = false
+        let forumViewController: ForumViewController = ForumViewController(userReference: userReference)
+        let forumNavigationController: UINavigationController = UINavigationController(rootViewController: forumViewController)
         let tabbarController: UITabBarController = UITabBarController(nibName: nil, bundle: nil)
-        tabbarController.setViewControllers([navigationController], animated: true)
+        tabbarController.setViewControllers([navigationController, forumNavigationController], animated: true)
         self.window?.rootViewController = tabbarController
         self.window?.makeKeyAndVisible()
 

@@ -13,7 +13,7 @@
 		12D75CC222546248004D1AC4 /* Messagestore.h in Headers */ = {isa = PBXBuildFile; fileRef = 12D75CB422546247004D1AC4 /* Messagestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12D75CCF225463B3004D1AC4 /* RoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */; };
 		12D75CD0225463B3004D1AC4 /* TranscriptProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */; };
-		12D75CD1225463B3004D1AC4 /* UserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCD225463AF004D1AC4 /* UserProtocol.swift */; };
+		12D75CD1225463B3004D1AC4 /* MemberProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCD225463AF004D1AC4 /* MemberProtocol.swift */; };
 		12D75CD2225463B3004D1AC4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCE225463B2004D1AC4 /* Message.swift */; };
 		12D75D022254A6FD004D1AC4 /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */; };
 		12D75D032254A6FD004D1AC4 /* InboxViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */; };
@@ -26,6 +26,22 @@
 		12D75D0B2254A6FD004D1AC4 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CFE2254A6FD004D1AC4 /* MessagesView.swift */; };
 		12D75D0C2254A6FD004D1AC4 /* MessageViewLeftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CFF2254A6FD004D1AC4 /* MessageViewLeftCell.swift */; };
 		12D75D0D2254A6FD004D1AC4 /* MessageViewLeftCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75D002254A6FD004D1AC4 /* MessageViewLeftCell.xib */; };
+		12D8F2772359980D0053C3C9 /* TopicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2762359980D0053C3C9 /* TopicsViewController.swift */; };
+		12D8F27923599BC20053C3C9 /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27823599BC20053C3C9 /* PostsViewController.swift */; };
+		12D8F27C23599BD20053C3C9 /* Forum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27B23599BD20053C3C9 /* Forum.swift */; };
+		12D8F2802359A6CC0053C3C9 /* TopicViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27E2359A6CC0053C3C9 /* TopicViewCell.swift */; };
+		12D8F2812359A6CC0053C3C9 /* TopicViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F27F2359A6CC0053C3C9 /* TopicViewCell.xib */; };
+		12D8F2842359BF270053C3C9 /* Forum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27B23599BD20053C3C9 /* Forum.swift */; };
+		12D8F2852359BF2C0053C3C9 /* TopicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2762359980D0053C3C9 /* TopicsViewController.swift */; };
+		12D8F2862359BF2C0053C3C9 /* TopicViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27E2359A6CC0053C3C9 /* TopicViewCell.swift */; };
+		12D8F2872359BF2C0053C3C9 /* TopicViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F27F2359A6CC0053C3C9 /* TopicViewCell.xib */; };
+		12D8F2882359BF2F0053C3C9 /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F27823599BC20053C3C9 /* PostsViewController.swift */; };
+		12D8F28A2359C3E20053C3C9 /* ForumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2892359C3E20053C3C9 /* ForumViewController.swift */; };
+		12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28B2359CC390053C3C9 /* PostViewController.swift */; };
+		12D8F28E2359CCAC0053C3C9 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */; };
+		12D8F2902359CD1B0053C3C9 /* AddTopicViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */; };
+		12D8F2922359ED0E0053C3C9 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2912359ED0E0053C3C9 /* Subscription.swift */; };
+		12D8F2932359ED110053C3C9 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2912359ED0E0053C3C9 /* Subscription.swift */; };
 		12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE62255BEED0046CB1C /* Assets.xcassets */; };
 		12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE82255BEED0046CB1C /* LaunchScreen.storyboard */; };
 		12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AF02255BF060046CB1C /* HeaderCell.xib */; };
@@ -39,7 +55,7 @@
 		12E25B032255C1E10046CB1C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCE225463B2004D1AC4 /* Message.swift */; };
 		12E25B042255C1E10046CB1C /* RoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */; };
 		12E25B052255C1E10046CB1C /* TranscriptProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */; };
-		12E25B062255C1E10046CB1C /* UserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCD225463AF004D1AC4 /* UserProtocol.swift */; };
+		12E25B062255C1E10046CB1C /* MemberProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CCD225463AF004D1AC4 /* MemberProtocol.swift */; };
 		12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */; };
 		12E25B082255C1E40046CB1C /* InboxViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */; };
 		12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF62254A6FC004D1AC4 /* InboxViewCell.swift */; };
@@ -78,7 +94,7 @@
 		12D75CC122546248004D1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomProtocol.swift; sourceTree = "<group>"; };
 		12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranscriptProtocol.swift; sourceTree = "<group>"; };
-		12D75CCD225463AF004D1AC4 /* UserProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProtocol.swift; sourceTree = "<group>"; };
+		12D75CCD225463AF004D1AC4 /* MemberProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberProtocol.swift; sourceTree = "<group>"; };
 		12D75CCE225463B2004D1AC4 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
 		12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InboxViewCell.xib; sourceTree = "<group>"; };
@@ -91,6 +107,16 @@
 		12D75CFE2254A6FD004D1AC4 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		12D75CFF2254A6FD004D1AC4 /* MessageViewLeftCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewLeftCell.swift; sourceTree = "<group>"; };
 		12D75D002254A6FD004D1AC4 /* MessageViewLeftCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageViewLeftCell.xib; sourceTree = "<group>"; };
+		12D8F2762359980D0053C3C9 /* TopicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicsViewController.swift; sourceTree = "<group>"; };
+		12D8F27823599BC20053C3C9 /* PostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewController.swift; sourceTree = "<group>"; };
+		12D8F27B23599BD20053C3C9 /* Forum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forum.swift; sourceTree = "<group>"; };
+		12D8F27E2359A6CC0053C3C9 /* TopicViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicViewCell.swift; sourceTree = "<group>"; };
+		12D8F27F2359A6CC0053C3C9 /* TopicViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicViewCell.xib; sourceTree = "<group>"; };
+		12D8F2892359C3E20053C3C9 /* ForumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumViewController.swift; sourceTree = "<group>"; };
+		12D8F28B2359CC390053C3C9 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
+		12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddTopicViewController.storyboard; sourceTree = "<group>"; };
+		12D8F2912359ED0E0053C3C9 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		12E25ADD2255BEED0046CB1C /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12E25AE62255BEED0046CB1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12E25AE92255BEED0046CB1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -187,7 +213,9 @@
 				12D75CCE225463B2004D1AC4 /* Message.swift */,
 				12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */,
 				12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */,
-				12D75CCD225463AF004D1AC4 /* UserProtocol.swift */,
+				12D75CCD225463AF004D1AC4 /* MemberProtocol.swift */,
+				12D8F2912359ED0E0053C3C9 /* Subscription.swift */,
+				12D8F27A23599BC70053C3C9 /* Forum */,
 				12D75CF32254A6FC004D1AC4 /* Inbox */,
 				12D75CF72254A6FD004D1AC4 /* Messages */,
 				12D75CB522546247004D1AC4 /* Info.plist */,
@@ -229,6 +257,34 @@
 			path = Messages;
 			sourceTree = "<group>";
 		};
+		12D8F27A23599BC70053C3C9 /* Forum */ = {
+			isa = PBXGroup;
+			children = (
+				12D8F27B23599BD20053C3C9 /* Forum.swift */,
+				12D8F27D2359A6890053C3C9 /* Topics */,
+				12D8F2822359BA290053C3C9 /* Posts */,
+			);
+			path = Forum;
+			sourceTree = "<group>";
+		};
+		12D8F27D2359A6890053C3C9 /* Topics */ = {
+			isa = PBXGroup;
+			children = (
+				12D8F2762359980D0053C3C9 /* TopicsViewController.swift */,
+				12D8F27E2359A6CC0053C3C9 /* TopicViewCell.swift */,
+				12D8F27F2359A6CC0053C3C9 /* TopicViewCell.xib */,
+			);
+			path = Topics;
+			sourceTree = "<group>";
+		};
+		12D8F2822359BA290053C3C9 /* Posts */ = {
+			isa = PBXGroup;
+			children = (
+				12D8F27823599BC20053C3C9 /* PostsViewController.swift */,
+			);
+			path = Posts;
+			sourceTree = "<group>";
+		};
 		12E25ADE2255BEED0046CB1C /* Sample */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,6 +294,10 @@
 				12E25AF22255BF060046CB1C /* HeaderCell.swift */,
 				12E25AF02255BF060046CB1C /* HeaderCell.xib */,
 				12E25AF82255BF070046CB1C /* MessageViewController.swift */,
+				12D8F2892359C3E20053C3C9 /* ForumViewController.swift */,
+				12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */,
+				12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */,
+				12D8F28B2359CC390053C3C9 /* PostViewController.swift */,
 				12E25AF12255BF060046CB1C /* Room.swift */,
 				12E25AF72255BF070046CB1C /* Transcript.swift */,
 				12E25AF42255BF070046CB1C /* User.swift */,
@@ -378,6 +438,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12D8F2812359A6CC0053C3C9 /* TopicViewCell.xib in Resources */,
 				12D75D032254A6FD004D1AC4 /* InboxViewCell.xib in Resources */,
 				12D75D062254A6FD004D1AC4 /* MessageViewRightCell.xib in Resources */,
 				12D75D0D2254A6FD004D1AC4 /* MessageViewLeftCell.xib in Resources */,
@@ -395,8 +456,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12D8F2872359BF2C0053C3C9 /* TopicViewCell.xib in Resources */,
 				12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */,
 				12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */,
+				12D8F2902359CD1B0053C3C9 /* AddTopicViewController.storyboard in Resources */,
 				12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */,
 				12E25B122255C1E70046CB1C /* MessageViewLeftCell.xib in Resources */,
 				12E25B0B2255C1E70046CB1C /* MessageViewRightCell.xib in Resources */,
@@ -500,15 +563,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				12D75D0A2254A6FD004D1AC4 /* MessagesViewController.swift in Sources */,
+				12D8F2922359ED0E0053C3C9 /* Subscription.swift in Sources */,
 				12D75D022254A6FD004D1AC4 /* InboxViewController.swift in Sources */,
 				12D75CD2225463B3004D1AC4 /* Message.swift in Sources */,
 				12D75D092254A6FD004D1AC4 /* MessagesViewFlowLayout.swift in Sources */,
 				12D75CCF225463B3004D1AC4 /* RoomProtocol.swift in Sources */,
+				12D8F2772359980D0053C3C9 /* TopicsViewController.swift in Sources */,
 				12D75D072254A6FD004D1AC4 /* MessageViewRightCell.swift in Sources */,
 				12D75CD0225463B3004D1AC4 /* TranscriptProtocol.swift in Sources */,
+				12D8F2802359A6CC0053C3C9 /* TopicViewCell.swift in Sources */,
+				12D8F27923599BC20053C3C9 /* PostsViewController.swift in Sources */,
 				12D75D0C2254A6FD004D1AC4 /* MessageViewLeftCell.swift in Sources */,
+				12D8F27C23599BD20053C3C9 /* Forum.swift in Sources */,
 				12D75D0B2254A6FD004D1AC4 /* MessagesView.swift in Sources */,
-				12D75CD1225463B3004D1AC4 /* UserProtocol.swift in Sources */,
+				12D75CD1225463B3004D1AC4 /* MemberProtocol.swift in Sources */,
 				12D75D042254A6FD004D1AC4 /* InboxViewCell.swift in Sources */,
 				12D75D052254A6FD004D1AC4 /* MessageViewCell.swift in Sources */,
 			);
@@ -528,18 +596,26 @@
 			files = (
 				12E25AFD2255BF070046CB1C /* BoxViewController.swift in Sources */,
 				12E25B022255BF070046CB1C /* MessageViewController.swift in Sources */,
-				12E25B062255C1E10046CB1C /* UserProtocol.swift in Sources */,
+				12D8F2842359BF270053C3C9 /* Forum.swift in Sources */,
+				12E25B062255C1E10046CB1C /* MemberProtocol.swift in Sources */,
+				12D8F2862359BF2C0053C3C9 /* TopicViewCell.swift in Sources */,
+				12D8F2852359BF2C0053C3C9 /* TopicsViewController.swift in Sources */,
 				12E25B112255C1E70046CB1C /* MessageViewLeftCell.swift in Sources */,
 				12E25B102255C1E70046CB1C /* MessagesView.swift in Sources */,
 				12E25B0C2255C1E70046CB1C /* MessageViewRightCell.swift in Sources */,
 				12E25AFC2255BF070046CB1C /* HeaderCell.swift in Sources */,
 				12E25B052255C1E10046CB1C /* TranscriptProtocol.swift in Sources */,
 				12E25B032255C1E10046CB1C /* Message.swift in Sources */,
+				12D8F28A2359C3E20053C3C9 /* ForumViewController.swift in Sources */,
+				12D8F2882359BF2F0053C3C9 /* PostsViewController.swift in Sources */,
 				12E25AFE2255BF070046CB1C /* User.swift in Sources */,
+				12D8F2932359ED110053C3C9 /* Subscription.swift in Sources */,
 				12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */,
+				12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */,
 				12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */,
 				12E25B042255C1E10046CB1C /* RoomProtocol.swift in Sources */,
 				12E25B0F2255C1E70046CB1C /* MessagesViewController.swift in Sources */,
+				12D8F28E2359CCAC0053C3C9 /* AddTopicViewController.swift in Sources */,
 				12E25B0A2255C1E70046CB1C /* MessageViewCell.swift in Sources */,
 				12E25B0E2255C1E70046CB1C /* MessagesViewFlowLayout.swift in Sources */,
 				12E25B172255CAB30046CB1C /* ViewController.swift in Sources */,

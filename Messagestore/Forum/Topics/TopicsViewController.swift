@@ -1,5 +1,5 @@
 //
-//  TopicViewController.swift
+//  TopicsViewController.swift
 //  Messagestore
 //
 //  Created by 1amageek on 2019/10/18.
@@ -15,7 +15,8 @@ extension Forum {
      A ViewController that displays conversation-enabled topics.
      */
 
-    open class ForumViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    open class TopicsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDataSourcePrefetching {
+
 
         /// The ID of the user holding the DataSource.
         public let userID: String
@@ -35,7 +36,8 @@ extension Forum {
             return dateFormatter
         }()
 
-        public let tableView: UITableView = UITableView(frame: .zero, style: .plain)
+        /// Returns a CollectionView that displays a topic.
+        public private(set) var collectionView: UICollectionView!
 
         /// Returns a Section that reflects the update of the data source.
         open var targetSection: Int {
@@ -54,29 +56,27 @@ extension Forum {
 
         internal var isFirstFetching: Bool = true
 
-        public init(userID: String, fetching limit: Int = 20) {
-            self.userID = userID
+        public init(userReference: DocumentReference, fetching limit: Int = 20) {
+            self.userID = userReference.documentID
             self.limit = limit
             super.init(nibName: nil, bundle: nil)
-            self.title = "Message"
-            self.dataSource = dataSource(userID: userID, fetching: limit)
+            self.title = "Topics"
+            self.dataSource = dataSource(userReference: userReference, fetching: limit)
         }
 
         /// You can customize the data source by overriding here.
         ///
         /// - Parameters:
-        ///   - userID: Set the ID of the user who is participating in the Room.
+        ///   - userReference: Set the DocumentReference of the user who is participating in the topic.
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
-        open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<Document<TopicType>> {
-            let topicsReference: CollectionReference = Document<UserType>(id: self.userID).documentReference.collection("topics")
-            return DataSource<Document<TopicType>>.Query(topicsReference)
+        open func dataSource(userReference: DocumentReference, fetching limit: Int = 20) -> DataSource<Document<TopicType>> {
+            return DataSource<Document<TopicType>>.Query(userReference.collection("subscriptions"))
                 .order(by: "updatedAt", descending: true)
-                .where("isAvailable", isEqualTo: true)
                 .where("isHidden", isEqualTo: false)
                 .limit(to: limit)
                 .dataSource()
-//                .sorted(by: { $0.data!.lastTranscriptReceivedAt.rawValue > $1.data!.lastTranscriptReceivedAt.rawValue })
+                .sorted(by: { $0.updatedAt > $1.updatedAt })
         }
 
         public required init?(coder aDecoder: NSCoder) {
@@ -85,85 +85,49 @@ extension Forum {
 
         open override func loadView() {
             super.loadView()
-            self.view.addSubview(self.tableView)
-            self.tableView.register(UINib(nibName: "InboxViewCell", bundle: nil), forCellReuseIdentifier: "InboxViewCell")
+            let collectionViewLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: collectionViewLayout)
+            self.collectionView.alwaysBounceVertical = true
+            self.view.addSubview(self.collectionView)
+            self.collectionView.register(UINib(nibName: "TopicViewCell", bundle: nil), forCellWithReuseIdentifier: "TopicViewCell")
         }
 
         open override func viewDidLoad() {
             super.viewDidLoad()
             if #available(iOS 13.0, *) {
-                self.tableView.backgroundColor = UIColor.systemBackground
+                self.collectionView.backgroundColor = UIColor.systemBackground
             }
-            self.tableView.delegate = self
-            self.tableView.dataSource = self
-            self.tableView.rowHeight = UITableView.automaticDimension
-            let section: Int = self.targetSection
+            self.collectionView.delegate = self
+            self.collectionView.dataSource = self
             self.dataSource
                 .retrieve(from: { (snapshot, documentSnapshot, done) in
-                    let document: Document<RoomType> = Document(snapshot: documentSnapshot)!
-                    document.get { (item, error) in
+                    let subscription: Document<Subscription> = Document(snapshot: documentSnapshot)!
+                    let document: Document<TopicType> = Document(subscription[\.topic])
+                    document.get { (topic, error) in
                         if let error = error {
                             print(error)
                             done(document)
                             return
                         }
-                        done(item ?? document)
+                        done(topic ?? document)
                     }
                 })
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
                     guard let snapshot = snapshot else { return }
-                    guard let tableView: UITableView = self?.tableView else { return }
-
+                    guard let collectionView: UICollectionView = self?.collectionView else { return }
                     if !snapshot.metadata.hasPendingWrites {
-
-                        let insertIndexPaths: [IndexPath] = dataSourceSnapshot.changes.insertions.map { IndexPath(row: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section) }
-                        let deleteIndexPaths: [IndexPath] = dataSourceSnapshot.changes.deletions.map { IndexPath(row: dataSourceSnapshot.before.firstIndex(of: $0)!, section: section) }
-
-                        tableView.performBatchUpdates({
-                            tableView.insertRows(at: insertIndexPaths, with: .automatic)
-                            tableView.deleteRows(at: deleteIndexPaths, with: .automatic)
-                        }, completion: nil)
-
-                        if dataSourceSnapshot.before == dataSourceSnapshot.after {
-                            dataSourceSnapshot.changes.modifications
-                                .map { IndexPath(item: dataSourceSnapshot.after.firstIndex(of: $0)!, section: section)}
-                                .filter { (tableView.indexPathsForVisibleRows ?? []).contains($0) }
-                                .forEach { indexPath in
-                                    if let cell: UITableViewCell = tableView.cellForRow(at: indexPath) {
-                                        self?.configure(cell: cell, forAt: indexPath)
-                                    }
-                            }
-                        } else {
-                            for (beforeIndex, beforeRoom) in dataSourceSnapshot.before.enumerated() {
-                                for (afterIndex, afterRoom) in dataSourceSnapshot.after.enumerated() {
-                                    if beforeRoom.id == afterRoom.id {
-                                        let atIndexPath: IndexPath = IndexPath(row: beforeIndex, section: section)
-                                        let toIndexPath: IndexPath = IndexPath(row: afterIndex, section: section)
-                                        tableView.performBatchUpdates({
-                                            tableView.moveRow(at: atIndexPath, to: toIndexPath)
-                                        }, completion: nil)
-                                        if let cell: UITableViewCell = tableView.cellForRow(at: atIndexPath) {
-                                            self?.configure(cell: cell, forAt: atIndexPath)
-                                        }
-                                        if let cell: UITableViewCell = tableView.cellForRow(at: toIndexPath) {
-                                            self?.configure(cell: cell, forAt: toIndexPath)
-                                        }
-                                        return
-                                    }
-                                }
-                            }
-                        }
+                        collectionView.reloadData()
                     }
                 })
         }
 
         open override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            self.tableView.reloadData()
+            self.collectionView.reloadData()
         }
 
         open override func viewWillLayoutSubviews() {
-            self.tableView.frame = self.view.bounds
+            self.collectionView.frame = self.view.bounds
         }
 
         /// Start listening
@@ -174,15 +138,15 @@ extension Forum {
         // MARK: -
 
         /// It is called after the first fetch of the data source is finished.
-        open func didInitialize(of dataSource: DataSource<Document<RoomType>>) {
+        open func didInitialize(of dataSource: DataSource<Document<TopicType>>) {
             // override
         }
 
         /// Transit to the selected Room. Always override this function.
         /// - parameter room: The selected Room is passed.
         /// - returns: Returns the MessagesViewController to transition.
-        open func messageViewController(with room: Document<RoomType>) -> MessagesViewController {
-            return MessagesViewController(roomID: room.id)
+        open func postsViewController(with topic: Document<TopicType>) -> PostsViewController {
+            return PostsViewController(topic: topic)
         }
 
         // MARK: -
@@ -216,64 +180,43 @@ extension Forum {
 
         // MARK: -
 
-        open func numberOfSections(in tableView: UITableView) -> Int {
+        open func numberOfSections(in collectionView: UICollectionView) -> Int {
             return 1
         }
 
-        open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return self.dataSource.count
         }
 
-        open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell: InboxViewCell = tableView.dequeueReusableCell(withIdentifier: "InboxViewCell", for: indexPath) as! InboxViewCell
+        public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell: TopicViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicViewCell", for: indexPath) as! TopicViewCell
             configure(cell: cell, forAt: indexPath)
             return cell
         }
 
-        open func configure(cell: UITableViewCell, forAt indexPath: IndexPath) {
-            guard let cell: InboxViewCell = cell as? InboxViewCell else { return }
-            let room: Document<RoomType> = self.dataSource[indexPath.item]
-            cell.dateLabel.text = self.dateFormatter.string(from: room.updatedAt.dateValue())
-            if let name: String = room.data?.name {
-                cell.nameLabel.text = name
-            }
-            if let text: String = room.data?.lastTranscript?.text {
-                cell.messageLabel?.text = text
-            }
-
-            // Read
-            let document: Document<UserType> = Document(room.documentReference.collection("members").document(userID))
-            document.get { (member, error) in
-                if let error = error {
-                    print(error)
-                    return
-                }
-                if let timestamp = member?.updatedAt, let lastTranscriptReceivedAt = room.data?.lastTranscriptReceivedAt {
-                    if timestamp < lastTranscriptReceivedAt.rawValue {
-                        cell.format = .bold
-                    } else {
-                        cell.format = .normal
-                    }
-                } else {
-                    cell.format = .bold
-                }
-            }
+        open func configure(cell: UICollectionViewCell, forAt indexPath: IndexPath) {
+            guard let cell: TopicViewCell = cell as? TopicViewCell else { return }
+            let topic: Document<TopicType> = self.dataSource[indexPath.item]
+            cell.titleLabel.text = topic.data?.title
             cell.setNeedsDisplay()
         }
 
-        open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let room: Document<RoomType> = self.dataSource![indexPath.item]
-            let viewController: MessagesViewController = messageViewController(with: room)
+        open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            let topic: Document<TopicType> = self.dataSource[indexPath.item]
+            let viewController: PostsViewController = self.postsViewController(with: topic)
             self.navigationController?.pushViewController(viewController, animated: true)
         }
 
-        open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-            // Cancel image loading
+        open func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+
         }
 
-        @available(iOS 11.0, *)
-        open func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-            return nil
+        open func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+
+        }
+
+        public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return CGSize(width: UIScreen.main.bounds.width, height: 320)
         }
     }
 }

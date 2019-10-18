@@ -8,7 +8,8 @@
 
 import UIKit
 import Ballcap
-import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 
 class ViewController: UIViewController {
 
@@ -24,11 +25,9 @@ class ViewController: UIViewController {
         let batch: Batch = Batch()
         let room: Document<Room> = Document()
         room[\.members] = [userID, user.uid]
-        room[\.members]?.forEach({ (uid) in
+        room[\.members].forEach({ (uid) in
             let ref: DocumentReference = room.documentReference.collection("members").document(uid)
-            let member: Document<User> = Document(ref)
-            member.data = User()
-            batch.save(member)
+            batch.set([:], reference: ref)
         })
         batch.save(room)
         batch.commit { [weak self] (error) in

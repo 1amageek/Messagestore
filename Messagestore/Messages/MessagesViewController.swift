@@ -30,7 +30,7 @@ extension Message {
         public var transcripts: DataSource<Document<TranscriptType>>!
 
         /// Returns the DataSource of Member.
-        public var members: DataSource<Document<UserType>>!
+        public var members: DataSource<Document<MemberType>>!
         
         /// Returns a CollectionView that displays a message.
         public private(set) var collectionView: MessagesView!
@@ -144,7 +144,7 @@ extension Message {
                 .dataSource()
                 .sorted(by: { $0.updatedAt < $1.updatedAt })
 
-            self.members = DataSource<Document<UserType>>.Query(room.documentReference.collection("members"))
+            self.members = DataSource<Document<MemberType>>.Query(room.documentReference.collection("members"))
                 .order(by: "updatedAt", descending: true)
                 .dataSource()
                 .sorted(by: { $0.updatedAt < $1.updatedAt })
@@ -276,7 +276,7 @@ extension Message {
         
         open func markAsRead() {
             guard let uid: String = self.senderID else { return }
-            let document: Document<UserType> = Document(room.documentReference.collection("members").document(uid))
+            let document: Document<MemberType> = Document(room.documentReference.collection("members").document(uid))
             document.get { (document, error) in
                 if let error = error {
                     print(error)

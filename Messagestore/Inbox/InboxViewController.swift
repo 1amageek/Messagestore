@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 import Ballcap
 
 extension Message {
@@ -52,12 +53,12 @@ extension Message {
 
         internal var isFirstFetching: Bool = true
 
-        public init(userID: String, fetching limit: Int = 20) {
-            self.userID = userID
+        public init(userReference: DocumentReference, fetching limit: Int = 20) {
+            self.userID = userReference.documentID
             self.limit = limit
             super.init(nibName: nil, bundle: nil)
             self.title = "Message"
-            self.dataSource = dataSource(userID: userID, fetching: limit)
+            self.dataSource = dataSource(userReference: userReference, fetching: limit)
         }
 
         /// You can customize the data source by overriding here.
@@ -66,7 +67,7 @@ extension Message {
         ///   - userID: Set the ID of the user who is participating in the Room.
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
-        open func dataSource(userID: String, fetching limit: Int = 20) -> DataSource<Document<RoomType>> {
+        open func dataSource(userReference: DocumentReference, fetching limit: Int = 20) -> DataSource<Document<RoomType>> {
             return Document<RoomType>
                 .order(by: "lastTranscriptReceivedAt", descending: true)
                 .where("members", arrayContains: userID)
@@ -239,7 +240,7 @@ extension Message {
             }
 
             // Read
-            let document: Document<UserType> = Document(room.documentReference.collection("members").document(userID))
+            let document: Document<MemberType> = Document(room.documentReference.collection("members").document(userID))
             document.get { (member, error) in
                 if let error = error {
                     print(error)

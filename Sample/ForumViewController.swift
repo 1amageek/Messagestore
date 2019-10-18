@@ -7,24 +7,59 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Ballcap
 
-class ForumViewController: UIViewController {
+struct Topic: Modelable, Codable, TopicProtocol {
+
+    var title: String?
+
+    var thumbnailImage: File?
+
+    var isAvailable: Bool = true
+
+    var isHidden: Bool = false
+}
+
+struct Post: Modelable, Codable, PostProtocol {
+
+    var reply: DocumentReference?
+
+    var from: String = ""
+
+    var text: String?
+
+    var image: File?
+
+    var video: File?
+
+    var audio: File?
+
+    var location: GeoPoint?
+
+    var sticker: String?
+
+    var imageMap: [File] = []
+}
+
+class ForumViewController: Forum<Member, Topic, Post>.TopicsViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.listen()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Topic", style: .done, target: self, action: #selector(addTopic))
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func addTopic() {
+        let storyboard: UIStoryboard = UIStoryboard(name: "AddTopicViewController", bundle: nil)
+        let viewController: AddTopicViewController = storyboard.instantiateInitialViewController() as! AddTopicViewController
+        self.present(viewController, animated: true, completion: nil)
     }
-    */
+
+    override func postsViewController(with topic: Document<Topic>) -> Forum<Member, Topic, Post>.PostsViewController {
+        let viewController: PostViewController = PostViewController(topic: topic)
+        viewController.hidesBottomBarWhenPushed = true
+        return viewController
+    }
 
 }

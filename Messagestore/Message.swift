@@ -15,7 +15,7 @@ import Ballcap
  User Protocol, Room Protocol, Transcript Protocol.
  */
 open class Message<
-    UserType: UserProtocol & Modelable & Codable,
+    MemberType: MemberProtocol & Modelable & Codable,
     RoomType: RoomProtocol & Modelable & Codable,
     TranscriptType: Modelable & Codable
     >: NSObject where RoomType.TranscriptType == TranscriptType

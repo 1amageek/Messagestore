@@ -10,7 +10,7 @@ import UIKit
 import Ballcap
 import FirebaseAuth
 
-class BoxViewController: Message<User, Room, Transcript>.InboxViewController {
+class BoxViewController: Message<Member, Room, Transcript>.InboxViewController {
 
     override func loadView() {
         super.loadView()
@@ -28,7 +28,7 @@ class BoxViewController: Message<User, Room, Transcript>.InboxViewController {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
-    override func messageViewController(with room: Document<Room>) -> Message<User, Room, Transcript>.MessagesViewController {
+    override func messageViewController(with room: Document<Room>) -> Message<Member, Room, Transcript>.MessagesViewController {
         let viewController: MessageViewController = MessageViewController(room: room)
         viewController.hidesBottomBarWhenPushed = true
         return viewController
