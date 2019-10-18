@@ -11,7 +11,7 @@ import FirebaseFirestore
 import Ballcap
 
 extension Forum {
-    open class PostsViewController: UIViewController {
+    open class PostsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
         /// Returns the Topic holding the message.
         public let topic: Document<TopicType>
@@ -24,6 +24,9 @@ extension Forum {
 
         /// Returns the DataSource of Member.
         public var members: DataSource<Document<MemberType>>!
+
+        /// Returns a CollectionView that displays posts.
+        public private(set) var collectionView: UICollectionView!
 
         public init(topic: Document<TopicType>, fetching limit: Int = 20) {
             self.limit = limit
@@ -40,11 +43,44 @@ extension Forum {
         required public init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+
+        open func customLayout() -> UICollectionViewLayout {
+            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 320)
+            return layout
+        }
+
+        open override func loadView() {
+            super.loadView()
+            self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: self.customLayout())
+            self.collectionView.alwaysBounceVertical = true
+            self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
+            self.view.addSubview(self.collectionView)
+        }
         
         open override func viewDidLoad() {
             super.viewDidLoad()
+            if #available(iOS 13.0, *) {
+                self.collectionView.backgroundColor = UIColor.systemBackground
+            }
+        }
 
-            // Do any additional setup after loading the view.
+        open func numberOfSections(in collectionView: UICollectionView) -> Int {
+            return 1
+        }
+
+        open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            return self.posts.count
+        }
+
+        open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell: UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
+            return cell
+        }
+
+        /// Start listening
+        open func listen() {
+            self.posts.listen()
         }
 
     }

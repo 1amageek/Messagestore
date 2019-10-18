@@ -22,6 +22,22 @@ open class Forum<
     >: NSObject
 { }
 
+/**
+Subscription represents the relationship with Topic.
+When a user subscribes to Topic, the subscription is saved in `/users/:uid/subscriptions/`.
+*/
+public struct Subscription: Modelable, Codable {
+
+    public var topic: DocumentReference!
+
+    public var isHidden: Bool = false
+
+    public init() { }
+
+    public init(topic: DocumentReference) {
+        self.topic = topic
+    }
+}
 
 /**
  Define the properties that the `Post` object should have.

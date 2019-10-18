@@ -40,8 +40,6 @@
 		12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28B2359CC390053C3C9 /* PostViewController.swift */; };
 		12D8F28E2359CCAC0053C3C9 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */; };
 		12D8F2902359CD1B0053C3C9 /* AddTopicViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */; };
-		12D8F2922359ED0E0053C3C9 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2912359ED0E0053C3C9 /* Subscription.swift */; };
-		12D8F2932359ED110053C3C9 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F2912359ED0E0053C3C9 /* Subscription.swift */; };
 		12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE62255BEED0046CB1C /* Assets.xcassets */; };
 		12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE82255BEED0046CB1C /* LaunchScreen.storyboard */; };
 		12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AF02255BF060046CB1C /* HeaderCell.xib */; };
@@ -116,7 +114,6 @@
 		12D8F28B2359CC390053C3C9 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
 		12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddTopicViewController.storyboard; sourceTree = "<group>"; };
-		12D8F2912359ED0E0053C3C9 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		12E25ADD2255BEED0046CB1C /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12E25AE62255BEED0046CB1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12E25AE92255BEED0046CB1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -214,7 +211,6 @@
 				12D75CCB225463AA004D1AC4 /* RoomProtocol.swift */,
 				12D75CCC225463AC004D1AC4 /* TranscriptProtocol.swift */,
 				12D75CCD225463AF004D1AC4 /* MemberProtocol.swift */,
-				12D8F2912359ED0E0053C3C9 /* Subscription.swift */,
 				12D8F27A23599BC70053C3C9 /* Forum */,
 				12D75CF32254A6FC004D1AC4 /* Inbox */,
 				12D75CF72254A6FD004D1AC4 /* Messages */,
@@ -563,7 +559,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				12D75D0A2254A6FD004D1AC4 /* MessagesViewController.swift in Sources */,
-				12D8F2922359ED0E0053C3C9 /* Subscription.swift in Sources */,
 				12D75D022254A6FD004D1AC4 /* InboxViewController.swift in Sources */,
 				12D75CD2225463B3004D1AC4 /* Message.swift in Sources */,
 				12D75D092254A6FD004D1AC4 /* MessagesViewFlowLayout.swift in Sources */,
@@ -609,7 +604,6 @@
 				12D8F28A2359C3E20053C3C9 /* ForumViewController.swift in Sources */,
 				12D8F2882359BF2F0053C3C9 /* PostsViewController.swift in Sources */,
 				12E25AFE2255BF070046CB1C /* User.swift in Sources */,
-				12D8F2932359ED110053C3C9 /* Subscription.swift in Sources */,
 				12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */,
 				12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */,
 				12E25B092255C1E40046CB1C /* InboxViewCell.swift in Sources */,
