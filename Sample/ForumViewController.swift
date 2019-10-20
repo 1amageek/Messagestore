@@ -12,6 +12,10 @@ import Ballcap
 
 struct Topic: Modelable, Codable, TopicProtocol {
 
+    static var name: String {
+        return "topics"
+    }
+
     var title: String?
 
     var thumbnailImage: File?
@@ -22,6 +26,10 @@ struct Topic: Modelable, Codable, TopicProtocol {
 }
 
 struct Post: Modelable, Codable, PostProtocol {
+
+    static var name: String {
+        return "posts"
+    }
 
     var reply: DocumentReference?
 

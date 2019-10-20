@@ -40,6 +40,8 @@
 		12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28B2359CC390053C3C9 /* PostViewController.swift */; };
 		12D8F28E2359CCAC0053C3C9 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */; };
 		12D8F2902359CD1B0053C3C9 /* AddTopicViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */; };
+		12D8F29B235C5CC90053C3C9 /* PostViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D8F294235C487B0053C3C9 /* PostViewCell.swift */; };
+		12D8F29C235C5CC90053C3C9 /* PostViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D8F295235C487B0053C3C9 /* PostViewCell.xib */; };
 		12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE62255BEED0046CB1C /* Assets.xcassets */; };
 		12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AE82255BEED0046CB1C /* LaunchScreen.storyboard */; };
 		12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12E25AF02255BF060046CB1C /* HeaderCell.xib */; };
@@ -114,6 +116,8 @@
 		12D8F28B2359CC390053C3C9 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
 		12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddTopicViewController.storyboard; sourceTree = "<group>"; };
+		12D8F294235C487B0053C3C9 /* PostViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewCell.swift; sourceTree = "<group>"; };
+		12D8F295235C487B0053C3C9 /* PostViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostViewCell.xib; sourceTree = "<group>"; };
 		12E25ADD2255BEED0046CB1C /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12E25AE62255BEED0046CB1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12E25AE92255BEED0046CB1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -294,6 +298,8 @@
 				12D8F28D2359CCAC0053C3C9 /* AddTopicViewController.swift */,
 				12D8F28F2359CD1B0053C3C9 /* AddTopicViewController.storyboard */,
 				12D8F28B2359CC390053C3C9 /* PostViewController.swift */,
+				12D8F294235C487B0053C3C9 /* PostViewCell.swift */,
+				12D8F295235C487B0053C3C9 /* PostViewCell.xib */,
 				12E25AF12255BF060046CB1C /* Room.swift */,
 				12E25AF72255BF070046CB1C /* Transcript.swift */,
 				12E25AF42255BF070046CB1C /* User.swift */,
@@ -456,6 +462,7 @@
 				12E25AFA2255BF070046CB1C /* HeaderCell.xib in Resources */,
 				12E25AEA2255BEED0046CB1C /* LaunchScreen.storyboard in Resources */,
 				12D8F2902359CD1B0053C3C9 /* AddTopicViewController.storyboard in Resources */,
+				12D8F29C235C5CC90053C3C9 /* PostViewCell.xib in Resources */,
 				12E25AE72255BEED0046CB1C /* Assets.xcassets in Resources */,
 				12E25B122255C1E70046CB1C /* MessageViewLeftCell.xib in Resources */,
 				12E25B0B2255C1E70046CB1C /* MessageViewRightCell.xib in Resources */,
@@ -603,6 +610,7 @@
 				12E25B032255C1E10046CB1C /* Message.swift in Sources */,
 				12D8F28A2359C3E20053C3C9 /* ForumViewController.swift in Sources */,
 				12D8F2882359BF2F0053C3C9 /* PostsViewController.swift in Sources */,
+				12D8F29B235C5CC90053C3C9 /* PostViewCell.swift in Sources */,
 				12E25AFE2255BF070046CB1C /* User.swift in Sources */,
 				12E25B072255C1E40046CB1C /* InboxViewController.swift in Sources */,
 				12D8F28C2359CC390053C3C9 /* PostViewController.swift in Sources */,

@@ -20,11 +20,41 @@ open class Forum<
     TopicType: TopicProtocol & Modelable & Codable,
     PostType: PostProtocol & Modelable & Codable
     >: NSObject
-{ }
+{
+
+    open class func create<T: DataRepresentable, U: DataRepresentable>(topic: T, subscribers: [U], completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == TopicType, U.Model == MemberType {
+        let batch: Batch = Batch()
+        let subscription: Document<Subscription> = Document()
+        subscription.data?.topic = topic.documentReference
+        batch.save(topic)
+        batch.save(subscribers, to: topic.documentReference.collection("subscribers"))
+        subscribers.forEach { member in
+            batch.save(subscription, to: Firestore.firestore().document("/user/\(member.id)").collection("subscribedTopics"))
+        }
+        batch.commit(completion)
+    }
+
+    open class func subscribe<T: DataRepresentable, U: DataRepresentable>(topic: T, subscribers: [U], completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == TopicType, U.Model == MemberType {
+        let batch: Batch = Batch()
+        let subscription: Document<Subscription> = Document()
+        subscription.data?.topic = topic.documentReference
+        batch.save(subscribers, to: topic.documentReference.collection("subscribers"))
+        subscribers.forEach { member in
+            batch.save(subscription, to: Firestore.firestore().document("/user/\(member.id)").collection("subscribedTopics"))
+        }
+        batch.commit(completion)
+    }
+
+    open class func post<T: DataRepresentable, U: DataRepresentable>(_ post: T, to topic: U, completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == PostType, U.Model == TopicType {
+        let batch: Batch = Batch()
+        batch.save(post, to: topic.documentReference.collection("posts"))
+        batch.commit(completion)
+    }
+}
 
 /**
 Subscription represents the relationship with Topic.
-When a user subscribes to Topic, the subscription is saved in `/users/:uid/subscriptions/`.
+When a user subscribes to Topic, the subscription is saved in `/users/:uid/subscribedTopics/`.
 */
 public struct Subscription: Modelable, Codable {
 

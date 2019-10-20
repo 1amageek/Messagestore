@@ -11,10 +11,10 @@ import FirebaseFirestore
 import Ballcap
 
 extension Forum {
+    
     /**
      A ViewController that displays conversation-enabled topics.
      */
-
     open class TopicsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDataSourcePrefetching {
 
 
@@ -71,7 +71,7 @@ extension Forum {
         ///   - limit: Set the number of Transcripts to display at once.
         /// - Returns: Returns the DataSource with Query set.
         open func dataSource(userReference: DocumentReference, fetching limit: Int = 20) -> DataSource<Document<TopicType>> {
-            return DataSource<Document<TopicType>>.Query(userReference.collection("subscriptions"))
+            return DataSource<Document<TopicType>>.Query(userReference.collection("subscribedTopics"))
                 .order(by: "updatedAt", descending: true)
                 .where("isHidden", isEqualTo: false)
                 .limit(to: limit)
@@ -89,14 +89,18 @@ extension Forum {
             self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: collectionViewLayout)
             self.collectionView.alwaysBounceVertical = true
             self.view.addSubview(self.collectionView)
+            if #available(iOS 13.0, *) {
+                 self.view.backgroundColor = UIColor.systemBackground
+                 self.collectionView.backgroundColor = UIColor.systemBackground
+            } else {
+                self.view.backgroundColor = UIColor.white
+                self.collectionView.backgroundColor = UIColor.white
+            }
             self.collectionView.register(UINib(nibName: "TopicViewCell", bundle: nil), forCellWithReuseIdentifier: "TopicViewCell")
         }
 
         open override func viewDidLoad() {
             super.viewDidLoad()
-            if #available(iOS 13.0, *) {
-                self.collectionView.backgroundColor = UIColor.systemBackground
-            }
             self.collectionView.delegate = self
             self.collectionView.dataSource = self
             self.dataSource
