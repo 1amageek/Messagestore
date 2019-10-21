@@ -30,6 +30,7 @@
 		128125B0235D81DC001ABD8B /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF42254A6FC004D1AC4 /* InboxViewController.swift */; };
 		128125B1235D81DC001ABD8B /* InboxViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D75CF52254A6FC004D1AC4 /* InboxViewCell.xib */; };
 		128125B2235D81DC001ABD8B /* InboxViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CF62254A6FC004D1AC4 /* InboxViewCell.swift */; };
+		128125B5235D8D21001ABD8B /* Messagestore.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 128125B4235D8D20001ABD8B /* Messagestore.podspec */; };
 		12D75CBB22546248004D1AC4 /* Messagestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12D75CB122546247004D1AC4 /* Messagestore.framework */; };
 		12D75CC022546248004D1AC4 /* MessagestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D75CBF22546248004D1AC4 /* MessagestoreTests.swift */; };
 		12D75CC222546248004D1AC4 /* Messagestore.h in Headers */ = {isa = PBXBuildFile; fileRef = 12D75CB422546247004D1AC4 /* Messagestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -80,6 +81,7 @@
 
 /* Begin PBXFileReference section */
 		1215F31022F174BD0075B47A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		128125B4235D8D20001ABD8B /* Messagestore.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Messagestore.podspec; sourceTree = "<group>"; };
 		12D75CB122546247004D1AC4 /* Messagestore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Messagestore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12D75CB422546247004D1AC4 /* Messagestore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Messagestore.h; sourceTree = "<group>"; };
 		12D75CB522546247004D1AC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 		12D75CA722546247004D1AC4 = {
 			isa = PBXGroup;
 			children = (
+				128125B4235D8D20001ABD8B /* Messagestore.podspec */,
 				12D75CB322546247004D1AC4 /* Messagestore */,
 				12D75CBE22546248004D1AC4 /* MessagestoreTests */,
 				12E25ADE2255BEED0046CB1C /* Sample */,
@@ -440,6 +443,7 @@
 			files = (
 				1281259E235D81D5001ABD8B /* MessageViewRightCell.xib in Resources */,
 				128125B1235D81DC001ABD8B /* InboxViewCell.xib in Resources */,
+				128125B5235D8D21001ABD8B /* Messagestore.podspec in Resources */,
 				128125A4235D81D5001ABD8B /* MessageViewLeftCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
