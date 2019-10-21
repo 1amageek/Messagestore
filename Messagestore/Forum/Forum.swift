@@ -19,9 +19,12 @@ open class Forum<
     MemberType: MemberProtocol & Modelable & Codable,
     TopicType: TopicProtocol & Modelable & Codable,
     PostType: PostProtocol & Modelable & Codable
-    >: NSObject
-{
+>: NSObject {
 
+    /// Create a new topic.
+    /// - Parameter topic: A new topic
+    /// - Parameter subscribers: The first user to subscribe.
+    /// - Parameter completion: The Firestore batch callback.
     open class func create<T: DataRepresentable, U: DataRepresentable>(topic: T, subscribers: [U], completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == TopicType, U.Model == MemberType {
         let batch: Batch = Batch()
         let subscription: Document<Subscription> = Document()
@@ -29,22 +32,34 @@ open class Forum<
         batch.save(topic)
         batch.save(subscribers, to: topic.documentReference.collection("subscribers"))
         subscribers.forEach { member in
-            batch.save(subscription, to: Firestore.firestore().document("/user/\(member.id)").collection("subscribedTopics"))
+            batch.save(subscription, to: member.documentReference.collection("subscribedTopics"))
         }
         batch.commit(completion)
     }
 
+    /// Start a topic subscription.
+    /// - Parameter topic: The topic to subscribe to.
+    /// - Parameter subscribers: Specify the user to subscribe to. Specify MemberType but you must have user documentReference to save subscribedTopics to user's subCollection.
+    ///
+    ///     ex.
+    ///     DocumentReference: `/users/:uid`
+    ///
+    /// - Parameter completion: The Firestore batch callback.
     open class func subscribe<T: DataRepresentable, U: DataRepresentable>(topic: T, subscribers: [U], completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == TopicType, U.Model == MemberType {
         let batch: Batch = Batch()
         let subscription: Document<Subscription> = Document()
         subscription.data?.topic = topic.documentReference
         batch.save(subscribers, to: topic.documentReference.collection("subscribers"))
         subscribers.forEach { member in
-            batch.save(subscription, to: Firestore.firestore().document("/user/\(member.id)").collection("subscribedTopics"))
+            batch.save(subscription, to: member.documentReference.collection("subscribedTopics"))
         }
         batch.commit(completion)
     }
 
+    /// Post to the target topic.
+    /// - Parameter post: The post is posted to the topic.
+    /// - Parameter topic: Post to this topic.
+    /// - Parameter completion: The Firestore batch callback.
     open class func post<T: DataRepresentable, U: DataRepresentable>(_ post: T, to topic: U, completion: ((Error?) -> Void)? = nil) where T: Object, U: Object, T.Model == PostType, U.Model == TopicType {
         let batch: Batch = Batch()
         batch.save(post, to: topic.documentReference.collection("posts"))
@@ -53,9 +68,9 @@ open class Forum<
 }
 
 /**
-Subscription represents the relationship with Topic.
-When a user subscribes to Topic, the subscription is saved in `/users/:uid/subscribedTopics/`.
-*/
+ Subscription represents the relationship with Topic.
+ When a user subscribes to Topic, the subscription is saved in `/users/:uid/subscribedTopics/`.
+ */
 public struct Subscription: Modelable, Codable {
 
     public var topic: DocumentReference!
