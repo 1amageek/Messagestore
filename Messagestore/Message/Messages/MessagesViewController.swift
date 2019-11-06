@@ -306,6 +306,8 @@ extension Message {
                 return
             }
             self.transcript(transcript, willSendTo: room, with: batch)
+            guard transcript.data?.text != nil else { return }
+            
             self.room.data?.lastTranscriptReceivedAt = .pending
             self.room.data?.lastTranscript = transcript.data
             batch.save(transcript)
