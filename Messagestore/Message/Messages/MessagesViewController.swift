@@ -70,7 +70,9 @@ extension Message {
         /// bottom whenever the `InputTextView` begins editing.
         ///
         /// The default value of this property is `false`.
-        open var scrollsToBottomOnKeybordBeginsEditing: Bool = false
+        open var scrollsToBottomOnKeybordBeginsEditing: Bool {
+            return true
+        }
         
         open override var canBecomeFirstResponder: Bool {
             return true
