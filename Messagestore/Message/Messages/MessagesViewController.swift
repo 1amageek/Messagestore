@@ -186,17 +186,6 @@ extension Message {
             super.viewDidLoad()
             self.addKeyboardObservers()
             self.transcripts
-                .retrieve(from: { (snapshot, documentSnapshot, done) in
-                    let document: Document<TranscriptType> = Document(snapshot: documentSnapshot)!
-                    document.get { (item, error) in
-                        if let error = error {
-                            print(error)
-                            done(document)
-                            return
-                        }
-                        done(item ?? document)
-                    }
-                })
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
                     guard let collectionView: MessagesView = self?.collectionView else { return }
                     guard let section: Int = self?.targetSection else { return }

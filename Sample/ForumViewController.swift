@@ -90,15 +90,19 @@ class ForumViewController: Forum<Member, Topic, Post>.TopicsViewController, UICo
         self.collectionView.dataSource = self
         self.dataSource
             .retrieve(from: { (snapshot, documentSnapshot, done) in
-                let subscription: Document<Subscription> = Document(snapshot: documentSnapshot)!
-                let document: Document<Topic> = Document(subscription[\.topic])
-                document.get { (topic, error) in
-                    if let error = error {
-                        print(error)
-                        done(document)
-                        return
+                do {
+                    let subscription: Document<Subscription> = try Document(snapshot: documentSnapshot)
+                    let document: Document<Topic> = Document(subscription[\.topic])
+                    _ = document.get { (topic, error) in
+                        if let error = error {
+                            print(error)
+                            done(document)
+                            return
+                        }
+                        done(topic ?? document)
                     }
-                    done(topic ?? document)
+                } catch (let error) {
+                    print(error)
                 }
             })
             .onChanged { [weak self] (_, _) in

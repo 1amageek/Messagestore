@@ -97,17 +97,6 @@ extension Message {
             self.tableView.rowHeight = UITableView.automaticDimension
             let section: Int = self.targetSection
             self.dataSource
-                .retrieve(from: { (snapshot, documentSnapshot, done) in
-                    let document: Document<RoomType> = Document(snapshot: documentSnapshot)!
-                    document.get { (item, error) in
-                        if let error = error {
-                            print(error)
-                            done(document)
-                            return
-                        }
-                        done(item ?? document)
-                    }
-                })
                 .onChanged({ [weak self] (snapshot, dataSourceSnapshot) in
                     guard let snapshot = snapshot else { return }
                     guard let tableView: UITableView = self?.tableView else { return }

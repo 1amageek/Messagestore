@@ -5,7 +5,7 @@ target 'Messagestore' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   use_frameworks!
  
-  pod 'Ballcap'
+  pod 'Ballcap', '1.2.0'
   pod 'Toolbar'
 
   target 'MessagestoreTests' do
